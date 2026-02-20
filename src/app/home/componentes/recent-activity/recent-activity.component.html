@@ -1,0 +1,31 @@
+<z-card zTitle="Atividades Recentes">
+  @if (activities.length === 0) {
+    <p class="text-center py-8 text-gray-500">Nenhuma atividade recente</p>
+  }
+
+  <div class="space-y-3">
+    @for (activity of activities; track activity.id) {
+      <div class="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50 transition-colors">
+        <!-- Ícone -->
+        <div class="text-2xl">{{ getActivityIcon(activity.type) }}</div>
+
+        <!-- Conteúdo -->
+        <div class="flex-1">
+          <p class="text-sm">{{ activity.description }}</p>
+
+          <div class="flex items-center gap-2 mt-1">
+            @if (activity.user) {
+              <span class="text-xs text-gray-500">por {{ activity.user }}</span>
+            }
+            <span class="text-xs text-gray-400">• {{ formatTimestamp(activity.timestamp) }}</span>
+          </div>
+        </div>
+
+        <!-- Badge de tipo -->
+        <z-badge [zType]="getActivityBadgeColor(activity.type)">
+          {{ activity.type.replace('_', ' ') }}
+        </z-badge>
+      </div>
+    }
+  </div>
+</z-card>

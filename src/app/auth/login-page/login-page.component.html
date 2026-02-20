@@ -1,0 +1,19 @@
+<div class="auth-page max-w-md mx-auto mt-24">
+  <z-card zTitle="Login">
+    <!-- Mensagem de Erro -->
+    @if (errorMessage()) {
+    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+      {{ errorMessage() }}
+    </div>
+    }
+
+    <!-- Formulário (componente filho) -->
+    <app-login-form [isLoading]="isLoading()" (loginSubmit)="onLogin($event)" />
+
+    <!-- Link para Registro -->
+    <div class="mt-4 text-sm text-center">
+      Não tem uma conta?
+      <a routerLink="/register" class="text-blue-600 hover:underline">Criar conta</a>
+    </div>
+  </z-card>
+</div>

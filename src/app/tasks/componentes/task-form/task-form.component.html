@@ -1,0 +1,90 @@
+<z-card [zTitle]="isEditMode() ? 'Editar Task' : 'Nova Task'">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Título -->
+    <z-form-field>
+      <z-form-label>Título *</z-form-label>
+      <z-form-control>
+        <input
+          z-input
+          formControlName="title"
+          placeholder="Digite o título da task"
+          class="w-full"
+        />
+      </z-form-control>
+      @if (hasError('title')) {
+      <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('title') }}</p>
+      }
+    </z-form-field>
+
+    <!-- Descrição -->
+    <z-form-field>
+      <z-form-label>Descrição *</z-form-label>
+      <z-form-control>
+        <textarea
+          z-input
+          formControlName="description"
+          placeholder="Descreva a task em detalhes"
+          rows="4"
+          class="w-full"
+        ></textarea>
+      </z-form-control>
+      @if (hasError('description')) {
+      <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('description') }}</p>
+      }
+    </z-form-field>
+
+    <!-- Prioridade -->
+    <z-form-field>
+      <z-form-label>Prioridade *</z-form-label>
+      <z-form-control>
+        <select z-input formControlName="priority" class="w-full">
+          @for (priority of priorityOptions; track priority) {
+          <option [value]="priority">{{ priority }}</option>
+          }
+        </select>
+      </z-form-control>
+    </z-form-field>
+
+    <!-- Data de Entrega -->
+    <z-form-field>
+      <z-form-label>Data de Entrega</z-form-label>
+      <z-form-control>
+        <input z-input type="date" formControlName="dueDate" class="w-full" />
+      </z-form-control>
+    </z-form-field>
+
+    <!-- Responsável -->
+    <z-form-field>
+      <z-form-label>Responsável</z-form-label>
+      <z-form-control>
+        <input
+          z-input
+          formControlName="assignedTo"
+          placeholder="Nome do responsável"
+          class="w-full"
+        />
+      </z-form-control>
+    </z-form-field>
+
+    <!-- Tags -->
+    <z-form-field>
+      <z-form-label>Tags</z-form-label>
+      <z-form-control>
+        <input
+          z-input
+          formControlName="tags"
+          placeholder="Separe por vírgula: backend, frontend, api"
+          class="w-full"
+        />
+      </z-form-control>
+    </z-form-field>
+
+    <!-- Botões -->
+    <div class="flex gap-2 justify-end pt-4">
+      <button z-button zVariant="outline" type="button" (click)="onCancel()">Cancelar</button>
+      <button z-button type="submit" [disabled]="form.invalid">
+        {{ isEditMode() ? 'Atualizar' : 'Criar' }}
+      </button>
+    </div>
+  </form>
+</z-card>

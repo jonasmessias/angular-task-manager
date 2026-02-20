@@ -1,0 +1,105 @@
+<div class="space-y-4">
+  @if (tasks.length === 0) {
+    <z-card>
+      <p class="text-center py-8 text-gray-500">Nenhuma task encontrada</p>
+    </z-card>
+  }
+  @for (task of tasks; track task.id) {
+    <z-card class="hover:shadow-lg transition-shadow">
+      <div class="space-y-3">
+        <!-- Cabeçalho da Task -->
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold">{{ task.title }}</h3>
+            <p class="text-sm text-gray-600 mt-1">{{ task.description }}</p>
+          </div>
+
+          <div class="flex gap-2">
+            <button z-button zVariant="outline" zSize="sm" (click)="onSelect(task)">Editar</button>
+            <button z-button zVariant="destructive" zSize="sm" (click)="onDelete(task.id)">
+              Deletar
+            </button>
+          </div>
+        </div>
+
+        <!-- Badges de Status e Prioridade -->
+        <div class="flex gap-2 flex-wrap">
+          <z-badge [zType]="getStatusColor(task.status)">
+            {{ task.status }}
+          </z-badge>
+          <z-badge [zType]="getPriorityColor(task.priority)">
+            Prioridade: {{ task.priority }}
+          </z-badge>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="text-sm text-gray-600 space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="font-medium">Prazo:</span>
+            <span>{{ formatDate(task.dueDate) }}</span>
+          </div>
+
+          @if (task.assignedTo) {
+            <div class="flex items-center gap-2">
+              <span class="font-medium">Responsável:</span>
+              <span>{{ task.assignedTo }}</span>
+            </div>
+          }
+          @if (task.tags && task.tags.length > 0) {
+            <div class="flex items-center gap-2">
+              <span class="font-medium">Tags:</span>
+              <div class="flex gap-1 flex-wrap">
+                @for (tag of task.tags; track tag) {
+                  <span class="px-2 py-1 bg-gray-100 rounded text-xs">{{ tag }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Ações Rápidas de Status -->
+        <div class="pt-2 border-t">
+          <span class="text-xs text-gray-500 mr-2">Mudar status:</span>
+          <div class="inline-flex gap-1">
+            <button
+              z-button
+              zVariant="outline"
+              zSize="sm"
+              [disabled]="task.status === TaskStatus.TODO"
+              (click)="onStatusChange(task, TaskStatus.TODO)"
+            >
+              TODO
+            </button>
+            <button
+              z-button
+              zVariant="outline"
+              zSize="sm"
+              [disabled]="task.status === TaskStatus.IN_PROGRESS"
+              (click)="onStatusChange(task, TaskStatus.IN_PROGRESS)"
+            >
+              Em Progresso
+            </button>
+            <button
+              z-button
+              zVariant="outline"
+              zSize="sm"
+              [disabled]="task.status === TaskStatus.REVIEW"
+              (click)="onStatusChange(task, TaskStatus.REVIEW)"
+            >
+              Review
+            </button>
+            <button
+              z-button
+              zVariant="outline"
+              zSize="sm"
+              [disabled]="task.status === TaskStatus.DONE"
+              (click)="onStatusChange(task, TaskStatus.DONE)"
+            >
+              Concluído
+            </button>
+          </div>
+        </div>
+      </div>
+    </z-card>
+  }
+</div>

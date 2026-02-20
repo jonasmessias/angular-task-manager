@@ -1,0 +1,37 @@
+<section class="p-4 space-y-4">
+  <!-- Cabeçalho -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-3xl font-bold">Gerenciamento de Tasks</h1>
+    <button z-button (click)="onNewTask()">+ Nova Task</button>
+  </div>
+
+  <!-- Filtros -->
+  <app-task-filters (filterChange)="onFilterChange($event)" />
+
+  <!-- Loading -->
+  @if (isLoading()) {
+  <z-card>
+    <p class="text-center py-8">Carregando tasks...</p>
+  </z-card>
+  }
+
+  <!-- Lista de Tasks -->
+  @if (!isLoading() && !showForm()) {
+  <app-task-list
+    [tasks]="filteredTasks()"
+    (taskSelect)="onTaskSelect($event)"
+    (taskDelete)="onTaskDelete($event)"
+    (taskUpdate)="onTaskUpdate($event)"
+  />
+  }
+
+  <!-- Formulário (Criar/Editar) -->
+  @if (showForm()) {
+  <app-task-form
+    [task]="selectedTask()"
+    (taskCreate)="onTaskCreate($event)"
+    (taskUpdate)="onTaskUpdate($event)"
+    (cancel)="onFormCancel()"
+  />
+  }
+</section>

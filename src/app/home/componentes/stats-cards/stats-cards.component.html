@@ -1,0 +1,39 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+  <!-- Total de Tasks -->
+  <z-card>
+    <div class="flex flex-col">
+      <span class="text-sm text-gray-600">Total de Tasks</span>
+      <span class="text-3xl font-bold mt-2">{{ stats.totalTasks }}</span>
+    </div>
+  </z-card>
+
+  <!-- Tasks Concluídas -->
+  <z-card>
+    <div class="flex flex-col">
+      <span class="text-sm text-gray-600">Concluídas</span>
+      <span class="text-3xl font-bold mt-2 text-green-600">{{ stats.completedTasks }}</span>
+      <span class="text-xs text-gray-500 mt-1">{{ getCompletionPercentage() }}% do total</span>
+    </div>
+  </z-card>
+
+  <!-- Tasks em Progresso -->
+  <z-card>
+    <div class="flex flex-col">
+      <span class="text-sm text-gray-600">Em Progresso</span>
+      <span class="text-3xl font-bold mt-2 text-blue-600">{{ stats.inProgressTasks }}</span>
+    </div>
+  </z-card>
+
+  <!-- Tasks Pendentes -->
+  <z-card>
+    <div class="flex flex-col">
+      <span class="text-sm text-gray-600">Pendentes</span>
+      <span class="text-3xl font-bold mt-2 text-orange-600">{{ stats.pendingTasks }}</span>
+    </div>
+  </z-card>
+</div>
+
+<!-- Link para página de tasks -->
+<div class="mt-4 text-center">
+  <a routerLink="/tasks" class="text-blue-600 hover:underline"> Ver todas as tasks → </a>
+</div>

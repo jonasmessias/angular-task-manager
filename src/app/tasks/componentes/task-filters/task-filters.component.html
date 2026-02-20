@@ -1,0 +1,42 @@
+<z-card zTitle="Filtros">
+  <div class="flex gap-4 items-end">
+    <!-- Filtro de Status -->
+    <z-form-field class="flex-1">
+      <z-form-label>Status</z-form-label>
+      <z-form-control>
+        <select
+          z-input
+          class="w-full"
+          [value]="selectedStatus() || ''"
+          (change)="onStatusChange($event)"
+        >
+          <option value="">Todos</option>
+          @for (status of statusOptions; track status) {
+          <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </z-form-control>
+    </z-form-field>
+
+    <!-- Filtro de Prioridade -->
+    <z-form-field class="flex-1">
+      <z-form-label>Prioridade</z-form-label>
+      <z-form-control>
+        <select
+          z-input
+          class="w-full"
+          [value]="selectedPriority() || ''"
+          (change)="onPriorityChange($event)"
+        >
+          <option value="">Todas</option>
+          @for (priority of priorityOptions; track priority) {
+          <option [value]="priority">{{ priority }}</option>
+          }
+        </select>
+      </z-form-control>
+    </z-form-field>
+
+    <!-- Botão de Limpar -->
+    <button z-button zVariant="outline" (click)="onClearFilters()">Limpar Filtros</button>
+  </div>
+</z-card>

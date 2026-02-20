@@ -1,0 +1,22 @@
+<section class="p-4 space-y-6">
+  <!-- Header de Boas-vindas -->
+  <app-welcome-header />
+
+  <!-- Loading -->
+  @if (isLoading()) {
+  <div class="text-center py-8">
+    <p>Carregando dashboard...</p>
+  </div>
+  }
+
+  <!-- Dashboard Content -->
+  @if (!isLoading()) {
+  <!-- Cards de Estatísticas -->
+  @if (stats()) {
+  <app-stats-cards [stats]="stats()!" />
+  }
+
+  <!-- Atividades Recentes -->
+  <app-recent-activity [activities]="activities()" />
+  }
+</section>
