@@ -38,11 +38,11 @@ export class AuthService {
 
   isPublicRoute(path: string): boolean {
     const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
-    return publicRoutes.some(route => path.startsWith(route));
+    return publicRoutes.some((route) => path.startsWith(route));
   }
 
   isPrivateRoute(path: string): boolean {
     const privateRoutes = ['/', '/tasks'];
-    return privateRoutes.some(route => path.startsWith(route));
+    return privateRoutes.some((route) => path.startsWith(route));
   }
 }

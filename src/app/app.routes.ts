@@ -16,14 +16,14 @@ export const routes: Routes = [
     path: 'forgot-password',
     loadComponent: () =>
       import('./auth/forgot-password-page/forgot-password-page.component').then(
-        (m) => m.ForgotPasswordPageComponent
+        (m) => m.ForgotPasswordPageComponent,
       ),
   },
   {
     path: 'reset-password',
     loadComponent: () =>
       import('./auth/reset-password-page/reset-password-page.component').then(
-        (m) => m.ResetPasswordPageComponent
+        (m) => m.ResetPasswordPageComponent,
       ),
   },
   {
@@ -31,7 +31,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () =>
       import('./layout/private-layout/private-layout.component').then(
-        (m) => m.PrivateLayoutComponent
+        (m) => m.PrivateLayoutComponent,
       ),
     children: [
       {
