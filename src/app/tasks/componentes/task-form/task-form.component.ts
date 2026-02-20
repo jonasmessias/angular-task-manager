@@ -11,15 +11,6 @@ import {
 import { ZardInputDirective } from '../../../shared/components/input/input.directive';
 import { CreateTaskDto, Task, TaskPriority, UpdateTaskDto } from '../../models/task.model';
 
-/**
- * Componente Filho: Formulário de Task (PRESENTATION)
- *
- * Responsabilidades:
- * - Recebe task para edição via @Input() (opcional)
- * - Valida campos do formulário
- * - Emite eventos de criação/atualização via @Output()
- * - NÃO chama services
- */
 @Component({
   selector: 'app-task-form',
   standalone: true,
@@ -54,9 +45,6 @@ export class TaskFormComponent implements OnInit {
     this.initForm();
   }
 
-  /**
-   * Inicializa o formulário com valores default ou da task
-   */
   private initForm(): void {
     this.form = this.fb.group({
       title: [this.task?.title || '', [Validators.required, Validators.minLength(3)]],
@@ -68,9 +56,6 @@ export class TaskFormComponent implements OnInit {
     });
   }
 
-  /**
-   * Submete o formulário
-   */
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -94,32 +79,20 @@ export class TaskFormComponent implements OnInit {
     }
   }
 
-  /**
-   * Cancela o formulário
-   */
   onCancel(): void {
     this.cancel.emit();
   }
 
-  /**
-   * Helper: formata data para input HTML
-   */
   private formatDateForInput(date: Date): string {
     const d = new Date(date);
     return d.toISOString().split('T')[0];
   }
 
-  /**
-   * Helper: verifica se um campo tem erro
-   */
   hasError(fieldName: string): boolean {
     const field = this.form.get(fieldName);
     return !!(field && field.invalid && field.touched);
   }
 
-  /**
-   * Helper: obtém mensagem de erro
-   */
   getErrorMessage(fieldName: string): string {
     const field = this.form.get(fieldName);
     if (!field || !field.errors) return '';

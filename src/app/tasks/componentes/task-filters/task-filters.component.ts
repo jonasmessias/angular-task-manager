@@ -10,14 +10,6 @@ import {
 } from '../../../shared/components/form/form.component';
 import { TaskPriority, TaskStatus } from '../../models/task.model';
 
-/**
- * Componente Filho: Filtros de Tasks (PRESENTATION)
- *
- * Responsabilidades:
- * - Recebe interação do usuário
- * - Emite eventos de filtro via @Output()
- * - NÃO manipula dados diretamente
- */
 @Component({
   selector: 'app-task-filters',
   standalone: true,
@@ -39,17 +31,12 @@ export class TaskFiltersComponent {
     priority?: TaskPriority;
   }>();
 
-  // Estados locais do filtro
   selectedStatus = signal<TaskStatus | undefined>(undefined);
   selectedPriority = signal<TaskPriority | undefined>(undefined);
 
-  // Opções disponíveis
   statusOptions = Object.values(TaskStatus);
   priorityOptions = Object.values(TaskPriority);
 
-  /**
-   * Emite evento de mudança de filtro de status
-   */
   onStatusChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     const status = value ? (value as TaskStatus) : undefined;
@@ -57,9 +44,6 @@ export class TaskFiltersComponent {
     this.emitFilters();
   }
 
-  /**
-   * Emite evento de mudança de filtro de prioridade
-   */
   onPriorityChange(event: Event): void {
     const value = (event.target as HTMLSelectElement).value;
     const priority = value ? (value as TaskPriority) : undefined;
@@ -67,18 +51,12 @@ export class TaskFiltersComponent {
     this.emitFilters();
   }
 
-  /**
-   * Limpa todos os filtros
-   */
   onClearFilters(): void {
     this.selectedStatus.set(undefined);
     this.selectedPriority.set(undefined);
     this.emitFilters();
   }
 
-  /**
-   * Emite os filtros atuais para o componente pai
-   */
   private emitFilters(): void {
     this.filterChange.emit({
       status: this.selectedStatus(),

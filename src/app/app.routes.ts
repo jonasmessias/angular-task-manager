@@ -1,12 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
 
-/**
- * Centralized route configuration for the app.
- * Public routes are top-level paths (login, register, etc.).
- * Private routes are under a root path guarded by AuthGuard and use a PrivateLayout component
- * that contains the Sidebar and a RouterOutlet for child pages.
- */
 export const routes: Routes = [
   {
     path: 'login',
@@ -32,7 +26,6 @@ export const routes: Routes = [
         (m) => m.ResetPasswordPageComponent
       ),
   },
-
   {
     path: '',
     canActivate: [authGuard],
@@ -54,7 +47,5 @@ export const routes: Routes = [
       },
     ],
   },
-
-  // fallback
   { path: '**', redirectTo: '' },
 ];
