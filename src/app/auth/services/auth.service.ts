@@ -35,4 +35,14 @@ export class AuthService {
   get token(): string | null {
     throw new Error('Not implemented');
   }
+
+  isPublicRoute(path: string): boolean {
+    const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+    return publicRoutes.some(route => path.startsWith(route));
+  }
+
+  isPrivateRoute(path: string): boolean {
+    const privateRoutes = ['/', '/tasks'];
+    return privateRoutes.some(route => path.startsWith(route));
+  }
 }
