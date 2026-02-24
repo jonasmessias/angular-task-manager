@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { RecentActivityComponent } from '../componentes/recent-activity/recent-activity.component';
-import { StatsCardsComponent } from '../componentes/stats-cards/stats-cards.component';
-import { WelcomeHeaderComponent } from '../componentes/welcome-header/welcome-header.component';
+import { RecentActivityComponent } from '../components/recent-activity/recent-activity.component';
+import { StatsCardsComponent } from '../components/stats-cards/stats-cards.component';
+import { WelcomeHeaderComponent } from '../components/welcome-header/welcome-header.component';
 import { DashboardStats, RecentActivity } from '../models/dashboard.model';
 import { HomeService } from '../services/home.service';
 
