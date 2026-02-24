@@ -5,8 +5,8 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "rootDir": "./src",
-    "ignoreDeprecations": "6.0",
-    "types": ["node"]
+    "types": ["node"],
+    "ignoreDeprecations": "5.0"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts"]

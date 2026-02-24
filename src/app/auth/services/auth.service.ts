@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import type { AuthResponse, LoginDto, RegisterDto, User } from 'src/app/auth/models/auth.model';
+import type { AuthResponse, LoginDto, RegisterDto, User } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
