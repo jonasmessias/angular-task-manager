@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ZardCardComponent } from '../../shared/components/card/card.component';
-import { LoginFormComponent } from '../componentes/login-form/login-form.component';
+import { LoginFormComponent } from '../components/login-form/login-form.component';
 import { LoginDto } from '../models/auth.model';
 import { AuthService } from '../services/auth.service';
 
