@@ -1,0 +1,47 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+  <!-- Email -->
+  <z-form-field>
+    <z-form-label>Email</z-form-label>
+    <z-form-control>
+      <input
+        z-input
+        type="email"
+        formControlName="email"
+        placeholder="seu@email.com"
+        class="w-full"
+      />
+    </z-form-control>
+    @if (hasError('email')) {
+    <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('email') }}</p>
+    }
+  </z-form-field>
+
+  <!-- Senha -->
+  <z-form-field>
+    <z-form-label>Senha</z-form-label>
+    <z-form-control>
+      <input
+        z-input
+        type="password"
+        formControlName="password"
+        placeholder="••••••"
+        class="w-full"
+      />
+    </z-form-control>
+    @if (hasError('password')) {
+    <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('password') }}</p>
+    }
+  </z-form-field>
+
+  <!-- Link Esqueci a Senha -->
+  <div class="text-right">
+    <a routerLink="/forgot-password" class="text-sm text-blue-600 hover:underline">
+      Esqueci a senha
+    </a>
+  </div>
+
+  <!-- Botão Submit -->
+  <button z-button type="submit" class="w-full" [disabled]="form.invalid || isLoading">
+    {{ isLoading ? 'Entrando...' : 'Entrar' }}
+  </button>
+</form>
