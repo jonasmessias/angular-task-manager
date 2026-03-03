@@ -12,13 +12,5 @@ export const API_ENDPOINTS = {
     FORGOT_PASSWORD: `${API_BASE}/auth/forgot-password`,
     RESET_PASSWORD: `${API_BASE}/auth/reset-password`,
   },
-  TASKS: {
-    BASE: `${API_BASE}/tasks`,
-    BY_ID: (id: string) => `${API_BASE}/tasks/${id}`,
-  },
-  USERS: {
-    BASE: `${API_BASE}/users`,
-    ME: `${API_BASE}/users/me`,
-    BY_ID: (id: string) => `${API_BASE}/users/${id}`,
-  },
+  USER: `${API_BASE}/user`,
 } as const;
