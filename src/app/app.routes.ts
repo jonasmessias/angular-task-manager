@@ -5,24 +5,26 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('./auth/login-page/login-page.component').then((m) => m.LoginPageComponent),
+      import('./features/auth/login-page/login-page.component').then((m) => m.LoginPageComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('./auth/register-page/register-page.component').then((m) => m.RegisterPageComponent),
+      import('./features/auth/register-page/register-page.component').then(
+        (m) => m.RegisterPageComponent,
+      ),
   },
   {
     path: 'forgot-password',
     loadComponent: () =>
-      import('./auth/forgot-password-page/forgot-password-page.component').then(
+      import('./features/auth/forgot-password-page/forgot-password-page.component').then(
         (m) => m.ForgotPasswordPageComponent,
       ),
   },
   {
     path: 'reset-password',
     loadComponent: () =>
-      import('./auth/reset-password-page/reset-password-page.component').then(
+      import('./features/auth/reset-password-page/reset-password-page.component').then(
         (m) => m.ResetPasswordPageComponent,
       ),
   },
@@ -30,22 +32,21 @@ export const routes: Routes = [
     path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./layout/private-layout/private-layout.component').then(
+      import('./layouts/private-layout/private-layout.component').then(
         (m) => m.PrivateLayoutComponent,
       ),
     children: [
       {
         path: '',
         pathMatch: 'full',
-        loadComponent: () =>
-          import('./home/home-page/home-page.component').then((m) => m.HomePageComponent),
+        redirectTo: 'dashboard',
       },
       {
-        path: 'tasks',
+        path: 'dashboard',
         loadComponent: () =>
-          import('./tasks/tasks-page/tasks-page.component').then((m) => m.TasksPageComponent),
+          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
     ],
   },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: 'login' },
 ];
