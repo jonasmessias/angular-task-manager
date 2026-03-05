@@ -1,14 +1,16 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
+import { authGuard, guestGuard, redirectGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'login',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./features/auth/login-page/login-page.component').then((m) => m.LoginPageComponent),
   },
   {
     path: 'register',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./features/auth/register-page/register-page.component').then(
         (m) => m.RegisterPageComponent,
@@ -16,6 +18,7 @@ export const routes: Routes = [
   },
   {
     path: 'forgot-password',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./features/auth/forgot-password-page/forgot-password-page.component').then(
         (m) => m.ForgotPasswordPageComponent,
@@ -23,6 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'reset-password',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./features/auth/reset-password-page/reset-password-page.component').then(
         (m) => m.ResetPasswordPageComponent,
@@ -44,5 +48,5 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', redirectTo: 'login' },
+  { path: '**', canActivate: [redirectGuard], loadComponent: () => import('./features/auth/login-page/login-page.component').then((m) => m.LoginPageComponent) },
 ];

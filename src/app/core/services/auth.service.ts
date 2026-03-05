@@ -83,15 +83,6 @@ export class AuthService {
     return this.accessTokenSignal();
   }
 
-  isPublicRoute(path: string): boolean {
-    const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
-    return publicRoutes.some((route) => path.startsWith(route));
-  }
-
-  isPrivateRoute(path: string): boolean {
-    return !this.isPublicRoute(path);
-  }
-
   private saveSession(response: AuthResponse): void {
     this.accessTokenSignal.set(response.accessToken);
     localStorage.setItem(StorageKeys.ACCESS_TOKEN, response.accessToken);

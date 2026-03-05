@@ -2,26 +2,38 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
-export const authGuard: CanActivateFn = (route, state) => {
+// Protege rotas privadas: redireciona para /login se não autenticado
+export const authGuard: CanActivateFn = () => {
   const router = inject(Router);
   const auth = inject(AuthService);
-  const path = state.url;
-
-  if (path === '/login' && auth.isAuthenticated) {
-    return router.createUrlTree(['/']);
-  }
-
-  if (auth.isPublicRoute(path)) {
-    return true;
-  }
 
   if (!auth.isAuthenticated) {
     return router.createUrlTree(['/login']);
   }
 
-  if (auth.isPrivateRoute(path)) {
-    return true;
+  return true;
+};
+
+// Protege rotas públicas: redireciona para / se já estiver autenticado
+export const guestGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  const auth = inject(AuthService);
+
+  if (auth.isAuthenticated) {
+    return router.createUrlTree(['/']);
   }
 
-  return router.createUrlTree(['/']);
+  return true;
+};
+
+// Rota fallback (**): redireciona com base no estado de autenticação
+export const redirectGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  const auth = inject(AuthService);
+
+  if (auth.isAuthenticated) {
+    return router.createUrlTree(['/']);
+  }
+
+  return router.createUrlTree(['/login']);
 };
