@@ -26,8 +26,9 @@ import { ZardIconComponent } from '../../shared/components/icon/icon.component';
           </p>
 
           <a
-            routerLink="/dashboard"
+            routerLink="/"
             routerLinkActive="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+            [routerLinkActiveOptions]="{ exact: true }"
             class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
           >
             <z-icon zType="house" class="size-4 shrink-0" />
