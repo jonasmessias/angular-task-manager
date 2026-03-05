@@ -15,6 +15,7 @@ export interface RegisterDto {
   username: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 export interface ForgotPasswordDto {
@@ -39,5 +40,4 @@ export interface AuthResponse {
   name: string;
   accessToken: string;
   refreshToken: string;
-  expiresIn: number;
 }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import type {
   AuthResponse,
   ForgotPasswordDto,
@@ -17,20 +17,26 @@ import { StorageKeys } from '../enums/storage-keys.enum';
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly userSignal = signal<User | null>(null);
+
   private readonly accessTokenSignal = signal<string | null>(
     localStorage.getItem(StorageKeys.ACCESS_TOKEN),
   );
 
-  login(dto: LoginDto): Observable<AuthResponse> {
+  private readonly userSignal = signal<User | null>(
+    JSON.parse(localStorage.getItem(StorageKeys.USER_DATA) ?? 'null'),
+  );
+
+  login(dto: LoginDto): Observable<User> {
     return this.http.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, dto).pipe(
       tap((response) => this.saveSession(response)),
+      switchMap(() => this.getProfile()),
     );
   }
 
-  register(dto: RegisterDto): Observable<AuthResponse> {
+  register(dto: RegisterDto): Observable<User> {
     return this.http.post<AuthResponse>(API_ENDPOINTS.AUTH.REGISTER, dto).pipe(
       tap((response) => this.saveSession(response)),
+      switchMap(() => this.getProfile()),
     );
   }
 
@@ -62,9 +68,7 @@ export class AuthService {
   }
 
   getProfile(): Observable<User> {
-    return this.http.get<User>(API_ENDPOINTS.USERS.PROFILE).pipe(
-      tap((user) => this.userSignal.set(user)),
-    );
+    return this.http.get<User>(API_ENDPOINTS.USERS.ME).pipe(tap((user) => this.saveUser(user)));
   }
 
   get isAuthenticated(): boolean {
@@ -92,6 +96,11 @@ export class AuthService {
     this.accessTokenSignal.set(response.accessToken);
     localStorage.setItem(StorageKeys.ACCESS_TOKEN, response.accessToken);
     localStorage.setItem(StorageKeys.REFRESH_TOKEN, response.refreshToken);
+  }
+
+  private saveUser(user: User): void {
+    this.userSignal.set(user);
+    localStorage.setItem(StorageKeys.USER_DATA, JSON.stringify(user));
   }
 
   private clearSession(): void {
