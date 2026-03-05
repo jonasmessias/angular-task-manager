@@ -32,7 +32,13 @@ import { ZardInputDirective } from '../../../shared/components/input/input.direc
             <z-form-field>
               <z-form-label>Nova Senha</z-form-label>
               <z-form-control>
-                <input z-input type="password" formControlName="newPassword" placeholder="••••••" class="w-full" />
+                <input
+                  z-input
+                  type="password"
+                  formControlName="newPassword"
+                  placeholder="••••••"
+                  class="w-full"
+                />
               </z-form-control>
               @if (hasError('newPassword')) {
                 <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('newPassword') }}</p>
@@ -42,7 +48,13 @@ import { ZardInputDirective } from '../../../shared/components/input/input.direc
             <z-form-field>
               <z-form-label>Confirmar Nova Senha</z-form-label>
               <z-form-control>
-                <input z-input type="password" formControlName="confirmNewPassword" placeholder="••••••" class="w-full" />
+                <input
+                  z-input
+                  type="password"
+                  formControlName="confirmNewPassword"
+                  placeholder="••••••"
+                  class="w-full"
+                />
               </z-form-control>
               @if (hasError('confirmNewPassword')) {
                 <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('confirmNewPassword') }}</p>

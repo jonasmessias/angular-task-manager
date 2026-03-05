@@ -32,7 +32,13 @@ import { RegisterDto } from '../models/auth.model';
           <z-form-field>
             <z-form-label>Nome</z-form-label>
             <z-form-control>
-              <input z-input type="text" formControlName="name" placeholder="Seu nome" class="w-full" />
+              <input
+                z-input
+                type="text"
+                formControlName="name"
+                placeholder="Seu nome"
+                class="w-full"
+              />
             </z-form-control>
             @if (hasError('name')) {
               <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('name') }}</p>
@@ -42,7 +48,13 @@ import { RegisterDto } from '../models/auth.model';
           <z-form-field>
             <z-form-label>Username</z-form-label>
             <z-form-control>
-              <input z-input type="text" formControlName="username" placeholder="seu_username" class="w-full" />
+              <input
+                z-input
+                type="text"
+                formControlName="username"
+                placeholder="seu_username"
+                class="w-full"
+              />
             </z-form-control>
             @if (hasError('username')) {
               <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('username') }}</p>
@@ -52,7 +64,13 @@ import { RegisterDto } from '../models/auth.model';
           <z-form-field>
             <z-form-label>Email</z-form-label>
             <z-form-control>
-              <input z-input type="email" formControlName="email" placeholder="seu@email.com" class="w-full" />
+              <input
+                z-input
+                type="email"
+                formControlName="email"
+                placeholder="seu@email.com"
+                class="w-full"
+              />
             </z-form-control>
             @if (hasError('email')) {
               <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('email') }}</p>
@@ -62,10 +80,32 @@ import { RegisterDto } from '../models/auth.model';
           <z-form-field>
             <z-form-label>Senha</z-form-label>
             <z-form-control>
-              <input z-input type="password" formControlName="password" placeholder="••••••" class="w-full" />
+              <input
+                z-input
+                type="password"
+                formControlName="password"
+                placeholder="••••••"
+                class="w-full"
+              />
             </z-form-control>
             @if (hasError('password')) {
               <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('password') }}</p>
+            }
+          </z-form-field>
+
+          <z-form-field>
+            <z-form-label>Confirmar Senha</z-form-label>
+            <z-form-control>
+              <input
+                z-input
+                type="password"
+                formControlName="confirmPassword"
+                placeholder="••••••"
+                class="w-full"
+              />
+            </z-form-control>
+            @if (hasError('confirmPassword')) {
+              <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('confirmPassword') }}</p>
             }
           </z-form-field>
 
@@ -99,6 +139,7 @@ export class RegisterPageComponent {
     username: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required]],
   });
 
   onSubmit(): void {
@@ -135,6 +176,7 @@ export class RegisterPageComponent {
     if (field.errors['required']) return 'Campo obrigatório';
     if (field.errors['email']) return 'Email inválido';
     if (field.errors['minlength']) return 'Mínimo de 6 caracteres';
+    if (field.errors['passwordMismatch']) return 'As senhas não coincidem';
     return '';
   }
 }

@@ -36,7 +36,13 @@ import { ZardInputDirective } from '../../../shared/components/input/input.direc
             <z-form-field>
               <z-form-label>Email</z-form-label>
               <z-form-control>
-                <input z-input type="email" formControlName="email" placeholder="seu@email.com" class="w-full" />
+                <input
+                  z-input
+                  type="email"
+                  formControlName="email"
+                  placeholder="seu@email.com"
+                  class="w-full"
+                />
               </z-form-control>
               @if (hasError('email')) {
                 <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('email') }}</p>

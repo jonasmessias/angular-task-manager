@@ -4,7 +4,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ZardCardComponent } from '../../../shared/components/card/card.component';
 import { LoginFormComponent } from '../components/login-form/login-form.component';
 import { LoginDto } from '../models/auth.model';
-
 @Component({
   selector: 'app-login-page',
   standalone: true,
