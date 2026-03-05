@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { ZardIconComponent } from '../../shared/components/icon/icon.component';
+import { ThemeToggleComponent } from '../../shared/components/theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-private-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, ZardIconComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, ZardIconComponent, ThemeToggleComponent],
   template: `
     <div class="flex h-screen w-screen overflow-hidden bg-background">
       <!-- Sidebar -->
@@ -69,6 +70,7 @@ import { ZardIconComponent } from '../../shared/components/icon/icon.component';
         >
           <h1 class="text-sm font-semibold text-foreground">{{ pageTitle() }}</h1>
           <div class="flex items-center gap-2">
+            <app-theme-toggle />
             <button
               class="p-2 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
             >

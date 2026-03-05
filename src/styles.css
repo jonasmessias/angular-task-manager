@@ -4,8 +4,13 @@
 @custom-variant dark (&:is(.dark *));
 
 
+/* ============================================================
+   LIGHT THEME (default)
+   ============================================================ */
 :root {
   --radius: 0.625rem;
+
+  /* ZardUI component tokens */
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -37,9 +42,52 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  /* App semantic tokens - Light */
+  --bg-primary:       #F0F2F5;
+  --bg-secondary:     #FFFFFF;
+  --bg-navbar:        #FFFFFF;
+  --bg-card:          #FFFFFF;
+  --bg-card-hover:    #F5F7FA;
+  --bg-input:         #F0F2F5;
+  --border-color:     #DDE1E7;
+
+  --text-primary:     #1A2332;
+  --text-secondary:   #4A5E72;
+  --text-muted:       #7A8FA6;
+
+  --accent-primary:   #4A90D9;
+  --accent-hover:     #3A7BC8;
+  --success:          #2EA876;
+  --warning:          #D4922A;
+  --danger:           #CC4444;
+
+  --scrollbar-track:  #F0F2F5;
+  --scrollbar-thumb:  #DDE1E7;
+  --scrollbar-hover:  #7A8FA6;
+
+  /* Workspace avatar colors */
+  --workspace-blue:   #4A90D9;
+  --workspace-purple: #7C5CBF;
+  --workspace-teal:   #3DBE8A;
+  --workspace-amber:  #E8A838;
+  --workspace-red:    #E05555;
+  --workspace-cyan:   #2AABCC;
+
+  /* Board cover gradients */
+  --cover-ocean:  linear-gradient(135deg, #1A3A5C, #2AABCC);
+  --cover-forest: linear-gradient(135deg, #1E3D2F, #3DBE8A);
+  --cover-galaxy: linear-gradient(135deg, #3D1F4E, #7C5CBF);
+  --cover-sunset: linear-gradient(135deg, #4A2C1A, #E8A838);
+  --cover-sky:    linear-gradient(135deg, #1A2E4A, #4A90D9);
+  --cover-ember:  linear-gradient(135deg, #2E1A1A, #E05555);
 }
 
+/* ============================================================
+   DARK THEME
+   ============================================================ */
 .dark {
+  /* ZardUI component tokens */
   --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
@@ -71,6 +119,29 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  /* App semantic tokens - Dark */
+  --bg-primary:       #0F1214;
+  --bg-secondary:     #161B1F;
+  --bg-navbar:        #0F1214;
+  --bg-card:          #1E2530;
+  --bg-card-hover:    #252D38;
+  --bg-input:         #1E2530;
+  --border-color:     #2A3441;
+
+  --text-primary:     #CDD5E0;
+  --text-secondary:   #7A8FA6;
+  --text-muted:       #4A5E72;
+
+  --accent-primary:   #4A90D9;
+  --accent-hover:     #5BA3F0;
+  --success:          #3DBE8A;
+  --warning:          #E8A838;
+  --danger:           #E05555;
+
+  --scrollbar-track:  #161B1F;
+  --scrollbar-thumb:  #2A3441;
+  --scrollbar-hover:  #4A5E72;
 }
 
 
@@ -114,12 +185,27 @@
 }
 
 
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-hover);
   }
 }
