@@ -26,7 +26,7 @@ export class LoginPageComponent {
     this.authService.login(dto).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/']);
+        this.router.navigate(['/dashboard']);
       },
       error: (err: Error) => {
         this.isLoading.set(false);

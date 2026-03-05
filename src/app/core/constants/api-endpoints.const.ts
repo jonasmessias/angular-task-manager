@@ -1,16 +1,17 @@
 import { environment } from '../../../environments/environment';
 
-const API_BASE = `${environment.apiUrl}`;
+const API_BASE = `${environment.apiUrl}/api`;
 
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: `${API_BASE}/auth/login`,
-    LOGOUT: `${API_BASE}/auth/logout`,
-    LOGOUT_ALL: `${API_BASE}/auth/logout-all`,
-    REFRESH_TOKEN: `${API_BASE}/auth/refresh`,
     REGISTER: `${API_BASE}/auth/register`,
+    LOGOUT: `${API_BASE}/auth/logout`,
+    REFRESH_TOKEN: `${API_BASE}/auth/refresh`,
     FORGOT_PASSWORD: `${API_BASE}/auth/forgot-password`,
     RESET_PASSWORD: `${API_BASE}/auth/reset-password`,
   },
-  USER: `${API_BASE}/user`,
+  USERS: {
+    PROFILE: `${API_BASE}/users/profile`,
+  },
 } as const;

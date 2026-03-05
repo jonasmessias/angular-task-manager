@@ -37,7 +37,7 @@ export class LoginFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      emailOrUsername: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
@@ -62,7 +62,6 @@ export class LoginFormComponent implements OnInit {
     if (!field || !field.errors) return '';
 
     if (field.errors['required']) return 'Campo obrigatório';
-    if (field.errors['email']) return 'Email inválido';
     if (field.errors['minlength']) return 'Mínimo de 6 caracteres';
     return '';
   }

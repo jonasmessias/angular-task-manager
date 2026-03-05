@@ -1,40 +1,43 @@
 export interface User {
   id: string;
   name: string;
+  username: string;
   email: string;
-  role: UserRole;
-  avatar?: string;
-}
-
-export enum UserRole {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
-  GUEST = 'GUEST',
 }
 
 export interface LoginDto {
-  email: string;
+  emailOrUsername: string;
   password: string;
 }
 
 export interface RegisterDto {
   name: string;
+  username: string;
   email: string;
   password: string;
-  confirmPassword: string;
-}
-
-export interface ResetPasswordDto {
-  token: string;
-  newPassword: string;
-  confirmPassword: string;
 }
 
 export interface ForgotPasswordDto {
   email: string;
 }
 
-export interface AuthResponse {
+export interface ResetPasswordDto {
   token: string;
-  user: User;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export interface RefreshTokenDto {
+  refreshToken: string;
+}
+
+export interface LogoutDto {
+  refreshToken: string;
+}
+
+export interface AuthResponse {
+  name: string;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
 }
