@@ -31,3 +31,8 @@ export interface UpdateCardDto {
   status?: CardStatus;
   position?: number;
 }
+
+export interface MoveCardDto {
+  targetListId: string;
+  position?: number;
+}

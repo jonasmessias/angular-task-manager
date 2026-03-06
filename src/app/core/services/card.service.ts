@@ -43,7 +43,7 @@ export class CardService {
           this._activeCardLoading.set(false);
         },
         error: (err) => {
-          this._activeCardError.set(err?.error?.message ?? 'Erro ao carregar card');
+          this._activeCardError.set(err?.error?.message ?? 'Failed to load card');
           this._activeCardLoading.set(false);
         },
       }),

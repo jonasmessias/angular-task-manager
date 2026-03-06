@@ -40,5 +40,7 @@ export const API_ENDPOINTS = {
     ALL: (boardId: string, listId: string) => `${BASE}/boards/${boardId}/lists/${listId}/cards`,
     BY_ID: (boardId: string, listId: string, cardId: string) =>
       `${BASE}/boards/${boardId}/lists/${listId}/cards/${cardId}`,
+    MOVE: (boardId: string, listId: string, cardId: string) =>
+      `${BASE}/boards/${boardId}/lists/${listId}/cards/${cardId}/move`,
   },
 } as const;

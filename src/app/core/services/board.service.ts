@@ -257,8 +257,8 @@ export class BoardService {
       };
     });
 
-    return this.http.put<CardResponse>(API_ENDPOINTS.CARDS.BY_ID(boardId, fromListId, cardId), {
-      listId: toListId,
+    return this.http.patch<CardResponse>(API_ENDPOINTS.CARDS.MOVE(boardId, fromListId, cardId), {
+      targetListId: toListId,
       position: newPosition,
     });
   }

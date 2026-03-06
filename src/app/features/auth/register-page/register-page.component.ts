@@ -94,16 +94,24 @@ export class RegisterPageComponent {
       return;
     }
 
-    const value = this.form.value;
+    const { name, username, email, password, confirmPassword } = this.form.value;
 
-    if (value.password !== value.confirmPassword) {
+    if (password !== confirmPassword) {
       this.toast.error('As senhas não coincidem');
       return;
     }
 
     this.isLoading.set(true);
 
-    this.authService.register(value as RegisterDto).subscribe({
+    const dto: RegisterDto = {
+      name: name!,
+      username: username!,
+      email: email!,
+      password: password!,
+      confirmPassword: confirmPassword!,
+    };
+
+    this.authService.register(dto).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.toast.success('Conta criada com sucesso!');
