@@ -14,11 +14,15 @@ import type {
 } from '../../features/auth/models/auth.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import { StorageKeys } from '../enums/storage-keys.enum';
+import { BoardService } from './board.service';
+import { WorkspaceService } from './workspace.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
+  private readonly workspaceService = inject(WorkspaceService);
+  private readonly boardService = inject(BoardService);
 
   private readonly _accessToken = signal<string | null>(
     localStorage.getItem(StorageKeys.ACCESS_TOKEN),
@@ -74,6 +78,8 @@ export class AuthService {
 
   clearSessionAndRedirect(): void {
     this.clearSession();
+    this.workspaceService.clearState();
+    this.boardService.clearState();
     this.router.navigate(['/login']);
   }
 
