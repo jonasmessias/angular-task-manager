@@ -2,6 +2,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
+import { API_ERROR_CODES } from '@core/constants/api-error-codes.const';
+import { REGEX_PATTERNS } from '@core/constants/regex-patterns.const';
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@shared/services/toast.service';
 import { PageCardComponent } from '@shared/ui/card/page-card.component';
@@ -42,6 +44,16 @@ export class LoginPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
+        const code: string | undefined = err.error?.code;
+
+        if (code === API_ERROR_CODES.EMAIL_NOT_VERIFIED) {
+          const isEmail = REGEX_PATTERNS.EMAIL.test(dto.emailOrUsername);
+          this.router.navigate(['/verify-email'], {
+            queryParams: isEmail ? { email: dto.emailOrUsername } : {},
+          });
+          return;
+        }
+
         this.toast.error(err.error?.message ?? 'Email/username ou senha inválidos');
       },
     });

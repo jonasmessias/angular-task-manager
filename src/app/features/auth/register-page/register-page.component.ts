@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
+import { REGISTER_ERROR_MESSAGES } from '@core/constants/api-error-codes.const';
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@shared/services/toast.service';
 import { AppButtonComponent } from '@shared/ui/button/app-button.component';
@@ -114,12 +115,18 @@ export class RegisterPageComponent {
     this.authService.register(dto).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.toast.success('Conta criada com sucesso!');
-        this.router.navigate(['/app']);
+        this.router.navigate(['/verify-email'], {
+          queryParams: { email: dto.email, from: 'register' },
+        });
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.toast.error(err.error?.message ?? 'Falha ao criar conta');
+        const code: string | undefined = err.error?.code;
+        const message =
+          (code && REGISTER_ERROR_MESSAGES[code]) ??
+          err.error?.message ??
+          'Falha ao criar conta. Tente novamente.';
+        this.toast.error(message);
       },
     });
   }
