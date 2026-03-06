@@ -2,15 +2,24 @@ import { Routes } from '@angular/router';
 import { authGuard, guestGuard, redirectGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // ── Rotas públicas (layout com split-screen) ──────────────────────────────
+  // Redirects root path based on auth state
   {
     path: '',
-    canActivate: [guestGuard],
+    pathMatch: 'full',
+    canActivate: [redirectGuard],
+    loadComponent: () =>
+      import('./layouts/public/public.layout').then((m) => m.PublicLayoutComponent),
+  },
+
+  // Public routes
+  {
+    path: '',
     loadComponent: () =>
       import('./layouts/public/public.layout').then((m) => m.PublicLayoutComponent),
     children: [
       {
         path: 'login',
+        canActivate: [guestGuard],
         loadComponent: () =>
           import('./features/auth/login-page/login-page.component').then(
             (m) => m.LoginPageComponent,
@@ -18,6 +27,7 @@ export const routes: Routes = [
       },
       {
         path: 'register',
+        canActivate: [guestGuard],
         loadComponent: () =>
           import('./features/auth/register-page/register-page.component').then(
             (m) => m.RegisterPageComponent,
@@ -40,27 +50,20 @@ export const routes: Routes = [
     ],
   },
 
-  // ── Rotas privadas (layout com navbar + sidebar) ──────────────────────────
+  // Private routes
   {
-    path: '',
+    path: 'app',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./layouts/private/private.layout').then((m) => m.PrivateLayoutComponent),
     children: [
       {
         path: '',
-        pathMatch: 'full',
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
     ],
   },
 
-  // ── Wildcard ──────────────────────────────────────────────────────────────
-  {
-    path: '**',
-    canActivate: [redirectGuard],
-    loadComponent: () =>
-      import('./features/auth/login-page/login-page.component').then((m) => m.LoginPageComponent),
-  },
+  { path: '**', redirectTo: '/login' },
 ];

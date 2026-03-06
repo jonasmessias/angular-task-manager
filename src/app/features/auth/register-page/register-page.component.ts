@@ -24,54 +24,52 @@ import { RegisterDto } from '../models/auth.model';
     AppInputComponent,
   ],
   template: `
-    <div class="auth-page max-w-md mx-auto mt-24 px-4">
-      <app-page-card title="Criar Conta">
-        <app-form (submitted)="onSubmit()">
-          <app-input
-            label="Nome"
-            placeholder="Seu nome"
-            [control]="form.get('name')"
-            [required]="true"
-          />
-          <app-input
-            label="Username"
-            placeholder="seu_username"
-            [control]="form.get('username')"
-            [required]="true"
-          />
-          <app-input
-            label="Email"
-            type="email"
-            placeholder="seu@email.com"
-            [control]="form.get('email')"
-            [required]="true"
-          />
-          <app-input
-            label="Senha"
-            type="password"
-            placeholder="••••••"
-            [control]="form.get('password')"
-            [required]="true"
-          />
-          <app-input
-            label="Confirmar Senha"
-            type="password"
-            placeholder="••••••"
-            [control]="form.get('confirmPassword')"
-            [required]="true"
-          />
+    <app-page-card title="Criar Conta">
+      <app-form (submitted)="onSubmit()">
+        <app-input
+          label="Nome"
+          placeholder="Seu nome"
+          [control]="form.get('name')"
+          [required]="true"
+        />
+        <app-input
+          label="Username"
+          placeholder="seu_username"
+          [control]="form.get('username')"
+          [required]="true"
+        />
+        <app-input
+          label="Email"
+          type="email"
+          placeholder="seu@email.com"
+          [control]="form.get('email')"
+          [required]="true"
+        />
+        <app-input
+          label="Senha"
+          type="password"
+          placeholder="••••••"
+          [control]="form.get('password')"
+          [required]="true"
+        />
+        <app-input
+          label="Confirmar Senha"
+          type="password"
+          placeholder="••••••"
+          [control]="form.get('confirmPassword')"
+          [required]="true"
+        />
 
-          <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
-            Criar Conta
-          </app-button>
-        </app-form>
+        <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
+          Criar Conta
+        </app-button>
+      </app-form>
 
-        <p class="text-center text-sm text-muted-foreground mt-4">
-          Já tem uma conta?
-          <a routerLink="/login" class="text-primary hover:underline font-medium">Entrar</a>
-        </p>
-      </app-page-card>
-    </div>
+      <p class="text-center text-sm text-muted-foreground mt-4">
+        Já tem uma conta?
+        <a routerLink="/login" class="text-primary hover:underline font-medium">Entrar</a>
+      </p>
+    </app-page-card>
   `,
 })
 export class RegisterPageComponent {
@@ -109,7 +107,7 @@ export class RegisterPageComponent {
       next: () => {
         this.isLoading.set(false);
         this.toast.success('Conta criada com sucesso!');
-        this.router.navigate(['/']);
+        this.router.navigate(['/app']);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);

@@ -14,16 +14,14 @@ import { LoginDto } from '../models/auth.model';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterModule, LoginFormComponent, PageCardComponent],
   template: `
-    <div class="auth-page max-w-md mx-auto mt-24">
-      <app-page-card title="Login">
-        <app-login-form [isLoading]="isLoading()" (loginSubmit)="onLogin($event)" />
+    <app-page-card title="Login">
+      <app-login-form [isLoading]="isLoading()" (loginSubmit)="onLogin($event)" />
 
-        <div class="mt-4 text-sm text-center text-muted-foreground">
-          Não tem uma conta?
-          <a routerLink="/register" class="text-primary hover:underline font-medium">Criar conta</a>
-        </div>
-      </app-page-card>
-    </div>
+      <div class="mt-4 text-sm text-center text-muted-foreground">
+        Não tem uma conta?
+        <a routerLink="/register" class="text-primary hover:underline font-medium">Criar conta</a>
+      </div>
+    </app-page-card>
   `,
 })
 export class LoginPageComponent {
@@ -40,7 +38,7 @@ export class LoginPageComponent {
       next: () => {
         this.isLoading.set(false);
         this.toast.success('Login realizado com sucesso!');
-        this.router.navigate(['/']);
+        this.router.navigate(['/app']);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);

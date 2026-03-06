@@ -18,7 +18,7 @@ export const guestGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
 
   if (auth.isAuthenticated()) {
-    return router.createUrlTree(['/']);
+    return router.createUrlTree(['/app']);
   }
 
   return true;
@@ -29,7 +29,7 @@ export const redirectGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
 
   if (auth.isAuthenticated()) {
-    return router.createUrlTree(['/']);
+    return router.createUrlTree(['/app']);
   }
 
   return router.createUrlTree(['/login']);
