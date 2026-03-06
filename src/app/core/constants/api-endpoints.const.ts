@@ -1,35 +1,45 @@
 import { environment } from '../../../environments/environment';
 
-const API_BASE = environment.apiUrl;
+const BASE = environment.apiUrl;
 
 export const API_ENDPOINTS = {
   AUTH: {
-    LOGIN: `${API_BASE}/auth/login`,
-    REGISTER: `${API_BASE}/auth/register`,
-    LOGOUT: `${API_BASE}/auth/logout`,
-    LOGOUT_ALL: `${API_BASE}/auth/logout-all`,
-    REFRESH_TOKEN: `${API_BASE}/auth/refresh`,
-    FORGOT_PASSWORD: `${API_BASE}/auth/forgot-password`,
-    RESET_PASSWORD: `${API_BASE}/auth/reset-password`,
+    LOGIN: `${BASE}/auth/login`,
+    REGISTER: `${BASE}/auth/register`,
+    LOGOUT: `${BASE}/auth/logout`,
+    LOGOUT_ALL: `${BASE}/auth/logout-all`,
+    REFRESH_TOKEN: `${BASE}/auth/refresh`,
+    FORGOT_PASSWORD: `${BASE}/auth/forgot-password`,
+    RESET_PASSWORD: `${BASE}/auth/reset-password`,
+    VERIFY_EMAIL: `${BASE}/auth/verify-email`,
+    RESEND_VERIFICATION: `${BASE}/auth/resend-verification`,
   },
+
   USERS: {
-    ME: `${API_BASE}/users/me`,
-    BY_ID: (id: string) => `${API_BASE}/users/${id}`,
-    ALL: `${API_BASE}/users`,
+    ALL: `${BASE}/users`,
+    ME: `${BASE}/users/me`,
+    BY_ID: (id: string) => `${BASE}/users/${id}`,
   },
+
   WORKSPACES: {
-    ALL: `${API_BASE}/workspaces`,
-    BY_ID: (id: string) => `${API_BASE}/workspaces/${id}`,
+    ALL: `${BASE}/workspaces`,
+    BY_ID: (id: string) => `${BASE}/workspaces/${id}`,
   },
+
   BOARDS: {
-    ALL: `${API_BASE}/boards`,
-    BY_ID: (id: string) => `${API_BASE}/boards/${id}`,
-    LISTS: (boardId: string) => `${API_BASE}/boards/${boardId}/lists`,
-    LIST_BY_ID: (boardId: string, listId: string) =>
-      `${API_BASE}/boards/${boardId}/lists/${listId}`,
-    CARDS: (boardId: string, listId: string) =>
-      `${API_BASE}/boards/${boardId}/lists/${listId}/cards`,
-    CARD_BY_ID: (boardId: string, listId: string, cardId: string) =>
-      `${API_BASE}/boards/${boardId}/lists/${listId}/cards/${cardId}`,
+    ALL: `${BASE}/boards`,
+    BY_ID: (id: string) => `${BASE}/boards/${id}`,
+  },
+
+  LISTS: {
+    ALL: (boardId: string) => `${BASE}/boards/${boardId}/lists`,
+    BY_ID: (boardId: string, listId: string) => `${BASE}/boards/${boardId}/lists/${listId}`,
+  },
+
+  CARDS: {
+    ALL: (boardId: string, listId: string) =>
+      `${BASE}/boards/${boardId}/lists/${listId}/cards`,
+    BY_ID: (boardId: string, listId: string, cardId: string) =>
+      `${BASE}/boards/${boardId}/lists/${listId}/cards/${cardId}`,
   },
 } as const;
