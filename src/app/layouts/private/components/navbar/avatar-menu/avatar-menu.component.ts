@@ -123,14 +123,16 @@ import { ZardIconComponent } from '../../../../../shared/components/icon/icon.co
         <button
           (click)="setLight()"
           class="flex items-center gap-3 w-full px-3 py-2 text-sm transition-colors hover:bg-accent cursor-pointer"
-          [class]="!themeService.isDark() ? 'text-primary font-medium' : 'text-foreground'"
+          [class]="
+            themeService.currentTheme() === 'light' ? 'text-primary font-medium' : 'text-foreground'
+          "
           role="menuitem"
         >
           <div
             class="size-4 rounded-full border-2 flex items-center justify-center shrink-0"
-            [class]="!themeService.isDark() ? 'border-primary' : 'border-border'"
+            [class]="themeService.currentTheme() === 'light' ? 'border-primary' : 'border-border'"
           >
-            @if (!themeService.isDark()) {
+            @if (themeService.currentTheme() === 'light') {
               <div class="size-2 rounded-full bg-primary"></div>
             }
           </div>
@@ -150,14 +152,16 @@ import { ZardIconComponent } from '../../../../../shared/components/icon/icon.co
         <button
           (click)="setDark()"
           class="flex items-center gap-3 w-full px-3 py-2 text-sm transition-colors hover:bg-accent cursor-pointer"
-          [class]="themeService.isDark() ? 'text-primary font-medium' : 'text-foreground'"
+          [class]="
+            themeService.currentTheme() === 'dark' ? 'text-primary font-medium' : 'text-foreground'
+          "
           role="menuitem"
         >
           <div
             class="size-4 rounded-full border-2 flex items-center justify-center shrink-0"
-            [class]="themeService.isDark() ? 'border-primary' : 'border-border'"
+            [class]="themeService.currentTheme() === 'dark' ? 'border-primary' : 'border-border'"
           >
-            @if (themeService.isDark()) {
+            @if (themeService.currentTheme() === 'dark') {
               <div class="size-2 rounded-full bg-primary"></div>
             }
           </div>
@@ -171,6 +175,47 @@ import { ZardIconComponent } from '../../../../../shared/components/icon/icon.co
             </div>
           </div>
           Dark
+        </button>
+
+        <!-- System -->
+        <button
+          (click)="setSystem()"
+          class="flex items-center gap-3 w-full px-3 py-2 text-sm transition-colors hover:bg-accent cursor-pointer"
+          [class]="
+            themeService.currentTheme() === 'system'
+              ? 'text-primary font-medium'
+              : 'text-foreground'
+          "
+          role="menuitem"
+        >
+          <div
+            class="size-4 rounded-full border-2 flex items-center justify-center shrink-0"
+            [class]="themeService.currentTheme() === 'system' ? 'border-primary' : 'border-border'"
+          >
+            @if (themeService.currentTheme() === 'system') {
+              <div class="size-2 rounded-full bg-primary"></div>
+            }
+          </div>
+          <div
+            class="w-10 h-7 rounded border border-border flex flex-col gap-0.5 p-1 overflow-hidden shrink-0"
+            style="background: linear-gradient(135deg, #fff 50%, #18181b 50%)"
+          >
+            <div
+              class="h-1 w-full rounded-sm"
+              style="background: linear-gradient(90deg, #e5e7eb 50%, #52525b 50%)"
+            ></div>
+            <div class="flex gap-0.5 flex-1">
+              <div
+                class="w-2 rounded-sm"
+                style="background: linear-gradient(180deg, #e5e7eb 50%, #52525b 50%)"
+              ></div>
+              <div
+                class="flex-1 rounded-sm"
+                style="background: linear-gradient(135deg, #f3f4f6 50%, #27272a 50%)"
+              ></div>
+            </div>
+          </div>
+          System
         </button>
       </div>
     </ng-template>
@@ -240,11 +285,15 @@ export class AvatarMenuComponent implements OnDestroy {
   }
 
   setLight(): void {
-    if (this.themeService.isDark()) this.themeService.toggleTheme();
+    this.themeService.setTheme('light');
   }
 
   setDark(): void {
-    if (!this.themeService.isDark()) this.themeService.toggleTheme();
+    this.themeService.setTheme('dark');
+  }
+
+  setSystem(): void {
+    this.themeService.setTheme('system');
   }
 
   logout(): void {
