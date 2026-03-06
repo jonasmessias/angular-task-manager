@@ -24,26 +24,21 @@ export class AuthService {
 
   private readonly userSignal = signal<User | null>(null);
 
-  /**
-   * Inicializa o serviço: se já houver token salvo, carrega o perfil do usuário.
-   * Chamado pelo APP_INITIALIZER no bootstrap da aplicação.
-   */
   init(): Observable<User | null> {
     if (!this.accessTokenSignal()) {
       return of(null);
     }
 
     return this.getProfile().pipe(
-      catchError(() => {
-        // Token expirado ou inválido — tenta refresh antes de limpar
-        return this.refreshToken().pipe(
+      catchError(() =>
+        this.refreshToken().pipe(
           switchMap(() => this.getProfile()),
           catchError(() => {
             this.clearSession();
             return of(null);
           }),
-        );
-      }),
+        ),
+      ),
     );
   }
 

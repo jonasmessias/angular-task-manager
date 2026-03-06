@@ -13,7 +13,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authenticatedReq).pipe(
     catchError((error) => {
-      // Só tenta refresh se for 401 E não for a própria requisição de refresh
       if (error.status === HttpStatusCode.Unauthorized && !req.url.includes('/auth/refresh')) {
         return authService.refreshToken().pipe(
           switchMap((response) => {
