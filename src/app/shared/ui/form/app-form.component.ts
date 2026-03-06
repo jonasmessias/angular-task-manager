@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import type { ClassValue } from 'clsx';
 import { mergeClasses } from '../../utils/merge-classes';
@@ -9,7 +9,7 @@ import { mergeClasses } from '../../utils/merge-classes';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule],
   template: `
-    <form [class]="classes()" (ngSubmit)="submitted.emit()" novalidate>
+    <form [class]="classes()" (submit)="onSubmit($event)" novalidate>
       <ng-content />
     </form>
   `,
@@ -21,25 +21,25 @@ export class AppFormComponent {
   readonly class = input<ClassValue>('');
   readonly submitted = output<void>();
 
-  protected readonly classes = () => {
-    const cols = this.cols();
-    const gap = this.gap();
+  protected onSubmit(event: SubmitEvent): void {
+    event.preventDefault();
+    this.submitted.emit();
+  }
 
-    const gapClass = {
+  protected readonly classes = computed(() => {
+    const gapClass: Record<string, string> = {
       sm: 'gap-3',
       default: 'gap-4',
       lg: 'gap-6',
-    }[gap];
+    };
 
-    const gridClass =
-      cols === 1
-        ? 'flex flex-col'
-        : cols === 2
-          ? 'grid grid-cols-1 sm:grid-cols-2'
-          : cols === 3
-            ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
-            : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+    const gridClass: Record<number, string> = {
+      1: 'flex flex-col',
+      2: 'grid grid-cols-1 sm:grid-cols-2',
+      3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+      4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4',
+    };
 
-    return mergeClasses(`${gridClass} ${gapClass}`, this.class());
-  };
+    return mergeClasses(`${gridClass[this.cols()]} ${gapClass[this.gap()]}`, this.class());
+  });
 }
