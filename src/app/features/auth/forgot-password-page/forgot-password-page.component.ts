@@ -1,78 +1,68 @@
-import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth.service';
-import { ZardButtonComponent } from '../../../shared/components/button/button.component';
-import { ZardCardComponent } from '../../../shared/components/card/card.component';
-import {
-  ZardFormControlComponent,
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-} from '../../../shared/components/form/form.component';
-import { ZardInputDirective } from '../../../shared/components/input/input.directive';
+import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
+import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
+import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
+import { AppInputComponent } from '../../../shared/ui/input/app-input.component';
 
 @Component({
   selector: 'app-forgot-password-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     RouterModule,
-    ZardCardComponent,
-    ZardButtonComponent,
-    ZardFormFieldComponent,
-    ZardFormLabelComponent,
-    ZardFormControlComponent,
-    ZardInputDirective,
+    PageCardComponent,
+    AppButtonComponent,
+    AppFormComponent,
+    AppInputComponent,
   ],
   template: `
     <div class="auth-page max-w-md mx-auto mt-24 px-4">
-      <z-card zTitle="Recuperar Senha">
+      <app-page-card title="Recuperar Senha">
         @if (!submitted()) {
-          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-            <p class="text-sm text-gray-500">
-              Informe seu email e enviaremos um link para redefinir sua senha.
-            </p>
+          <p class="text-sm text-muted-foreground mb-4">
+            Informe seu email e enviaremos um link para redefinir sua senha.
+          </p>
 
-            <z-form-field>
-              <z-form-label>Email</z-form-label>
-              <z-form-control>
-                <input
-                  z-input
-                  type="email"
-                  formControlName="email"
-                  placeholder="seu@email.com"
-                  class="w-full"
-                />
-              </z-form-control>
-              @if (hasError('email')) {
-                <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('email') }}</p>
-              }
-            </z-form-field>
+          @if (errorMessage()) {
+            <div class="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
+              {{ errorMessage() }}
+            </div>
+          }
 
-            @if (errorMessage()) {
-              <p class="text-sm text-red-500">{{ errorMessage() }}</p>
-            }
+          <app-form (submitted)="onSubmit()">
+            <app-input
+              label="Email"
+              type="email"
+              placeholder="seu@email.com"
+              [control]="form.get('email')"
+              [required]="true"
+            />
 
-            <button z-button type="submit" class="w-full" [disabled]="form.invalid || isLoading()">
-              {{ isLoading() ? 'Enviando...' : 'Enviar Link' }}
-            </button>
+            <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
+              Enviar Link
+            </app-button>
+          </app-form>
 
-            <p class="text-center text-sm">
-              <a routerLink="/login" class="text-blue-600 hover:underline">Voltar para Login</a>
-            </p>
-          </form>
+          <p class="text-center text-sm mt-4">
+            <a routerLink="/login" class="text-primary hover:underline">Voltar para Login</a>
+          </p>
         } @else {
           <div class="text-center space-y-4">
-            <p class="text-green-600 font-medium">Email enviado com sucesso!</p>
-            <p class="text-sm text-gray-500">
-              Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.
+            <p class="text-green-600 dark:text-green-400 font-medium">Email enviado com sucesso!</p>
+            <p class="text-sm text-muted-foreground">
+              Verifique sua caixa de entrada e siga as instruÃ§Ãµes para redefinir sua senha.
             </p>
             <a routerLink="/login">
-              <button z-button zVariant="outline" class="w-full">Voltar para Login</button>
+              <button z-button zType="outline" class="w-full">Voltar para Login</button>
             </a>
           </div>
         }
-      </z-card>
+      </app-page-card>
     </div>
   `,
 })
@@ -80,11 +70,11 @@ export class ForgotPasswordPageComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
 
-  isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
-  submitted = signal(false);
+  readonly isLoading = signal(false);
+  readonly errorMessage = signal<string | null>(null);
+  readonly submitted = signal(false);
 
-  form: FormGroup = this.fb.group({
+  readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
   });
 
@@ -97,7 +87,7 @@ export class ForgotPasswordPageComponent {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.authService.forgotPassword(this.form.value).subscribe({
+    this.authService.forgotPassword(this.form.value as { email: string }).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.submitted.set(true);
@@ -108,17 +98,5 @@ export class ForgotPasswordPageComponent {
       },
     });
   }
-
-  hasError(fieldName: string): boolean {
-    const field = this.form.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.form.get(fieldName);
-    if (!field?.errors) return '';
-    if (field.errors['required']) return 'Campo obrigatório';
-    if (field.errors['email']) return 'Email inválido';
-    return '';
-  }
 }
+

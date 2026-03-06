@@ -1,68 +1,66 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { ZardButtonComponent } from '../../../../shared/components/button/button.component';
-import {
-  ZardFormControlComponent,
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-} from '../../../../shared/components/form/form.component';
-import { ZardInputDirective } from '../../../../shared/components/input/input.directive';
+
+import { AppButtonComponent } from '@shared/ui/button/app-button.component';
+import { AppFormComponent } from '@shared/ui/form/app-form.component';
+import { AppInputComponent } from '@shared/ui/input/app-input.component';
 import { LoginDto } from '../../models/auth.model';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    ZardButtonComponent,
-    ZardFormFieldComponent,
-    ZardFormLabelComponent,
-    ZardFormControlComponent,
-    ZardInputDirective,
-  ],
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ReactiveFormsModule, RouterModule, AppFormComponent, AppInputComponent, AppButtonComponent],
+  template: `
+    <app-form (submitted)="onSubmit()">
+      <app-input
+        label="Email ou Username"
+        placeholder="seu@email.com ou username"
+        [control]="form.get('emailOrUsername')"
+        [required]="true"
+      />
+
+      <app-input
+        label="Senha"
+        type="password"
+        placeholder="••••••"
+        [control]="form.get('password')"
+        [required]="true"
+      />
+
+      <div class="text-right -mt-1">
+        <a routerLink="/forgot-password" class="text-sm text-primary hover:underline">
+          Esqueci a senha
+        </a>
+      </div>
+
+      <app-button
+        type="submit"
+        [loading]="isLoading()"
+        [class]="'w-full'"
+      >
+        Entrar
+      </app-button>
+    </app-form>
+  `,
 })
-export class LoginFormComponent implements OnInit {
-  @Input() isLoading: boolean = false;
-  @Output() loginSubmit = new EventEmitter<LoginDto>();
+export class LoginFormComponent {
+  private fb = inject(FormBuilder);
 
-  form!: FormGroup;
+  readonly isLoading = input(false);
+  readonly loginSubmit = output<LoginDto>();
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      emailOrUsername: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-    });
-  }
+  readonly form = this.fb.group({
+    emailOrUsername: ['', [Validators.required]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
 
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
-    const dto: LoginDto = this.form.value;
-    this.loginSubmit.emit(dto);
-  }
-
-  hasError(fieldName: string): boolean {
-    const field = this.form.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.form.get(fieldName);
-    if (!field || !field.errors) return '';
-
-    if (field.errors['required']) return 'Campo obrigatório';
-    if (field.errors['minlength']) return 'Mínimo de 6 caracteres';
-    return '';
+    this.loginSubmit.emit(this.form.value as LoginDto);
   }
 }

@@ -1,83 +1,65 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth.service';
-import { ZardButtonComponent } from '../../../shared/components/button/button.component';
-import { ZardCardComponent } from '../../../shared/components/card/card.component';
-import {
-  ZardFormControlComponent,
-  ZardFormFieldComponent,
-  ZardFormLabelComponent,
-} from '../../../shared/components/form/form.component';
-import { ZardInputDirective } from '../../../shared/components/input/input.directive';
+import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
+import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
+import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
+import { AppInputComponent } from '../../../shared/ui/input/app-input.component';
 
 @Component({
   selector: 'app-reset-password-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     RouterModule,
-    ZardCardComponent,
-    ZardButtonComponent,
-    ZardFormFieldComponent,
-    ZardFormLabelComponent,
-    ZardFormControlComponent,
-    ZardInputDirective,
+    PageCardComponent,
+    AppButtonComponent,
+    AppFormComponent,
+    AppInputComponent,
   ],
   template: `
     <div class="auth-page max-w-md mx-auto mt-24 px-4">
-      <z-card zTitle="Redefinir Senha">
+      <app-page-card title="Redefinir Senha">
         @if (!submitted()) {
-          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-            <z-form-field>
-              <z-form-label>Nova Senha</z-form-label>
-              <z-form-control>
-                <input
-                  z-input
-                  type="password"
-                  formControlName="newPassword"
-                  placeholder="••••••"
-                  class="w-full"
-                />
-              </z-form-control>
-              @if (hasError('newPassword')) {
-                <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('newPassword') }}</p>
-              }
-            </z-form-field>
+          @if (errorMessage()) {
+            <div class="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
+              {{ errorMessage() }}
+            </div>
+          }
 
-            <z-form-field>
-              <z-form-label>Confirmar Nova Senha</z-form-label>
-              <z-form-control>
-                <input
-                  z-input
-                  type="password"
-                  formControlName="confirmNewPassword"
-                  placeholder="••••••"
-                  class="w-full"
-                />
-              </z-form-control>
-              @if (hasError('confirmNewPassword')) {
-                <p class="text-sm text-red-500 mt-1">{{ getErrorMessage('confirmNewPassword') }}</p>
-              }
-            </z-form-field>
+          <app-form (submitted)="onSubmit()">
+            <app-input
+              label="Nova Senha"
+              type="password"
+              placeholder="••••••"
+              [control]="form.get('newPassword')"
+              [required]="true"
+            />
 
-            @if (errorMessage()) {
-              <p class="text-sm text-red-500">{{ errorMessage() }}</p>
-            }
+            <app-input
+              label="Confirmar Nova Senha"
+              type="password"
+              placeholder="••••••"
+              [control]="form.get('confirmNewPassword')"
+              [required]="true"
+            />
 
-            <button z-button type="submit" class="w-full" [disabled]="form.invalid || isLoading()">
-              {{ isLoading() ? 'Salvando...' : 'Redefinir Senha' }}
-            </button>
-          </form>
+            <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
+              Redefinir Senha
+            </app-button>
+          </app-form>
         } @else {
           <div class="text-center space-y-4">
-            <p class="text-green-600 font-medium">Senha redefinida com sucesso!</p>
+            <p class="text-green-600 dark:text-green-400 font-medium">Senha redefinida com sucesso!</p>
             <a routerLink="/login">
-              <button z-button class="w-full">Ir para o Login</button>
+              <app-button variant="outline" [class]="'w-full'">Ir para o Login</app-button>
             </a>
           </div>
         }
-      </z-card>
+      </app-page-card>
     </div>
   `,
 })
@@ -88,18 +70,18 @@ export class ResetPasswordPageComponent implements OnInit {
   private router = inject(Router);
 
   private token = '';
-  isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
-  submitted = signal(false);
 
-  form: FormGroup = this.fb.group({
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+  readonly isLoading = signal(false);
+  readonly errorMessage = signal<string | null>(null);
+  readonly submitted = signal(false);
+
+  readonly form = this.fb.group({
+    newPassword:        ['', [Validators.required, Validators.minLength(6)]],
     confirmNewPassword: ['', [Validators.required]],
   });
 
   ngOnInit(): void {
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
-
     if (!this.token) {
       this.router.navigate(['/login']);
     }
@@ -122,7 +104,7 @@ export class ResetPasswordPageComponent implements OnInit {
     this.errorMessage.set(null);
 
     this.authService
-      .resetPassword({ token: this.token, newPassword, confirmNewPassword })
+      .resetPassword({ token: this.token, newPassword: newPassword!, confirmNewPassword: confirmNewPassword! })
       .subscribe({
         next: () => {
           this.isLoading.set(false);
@@ -133,18 +115,5 @@ export class ResetPasswordPageComponent implements OnInit {
           this.errorMessage.set(err.message || 'Token inválido ou expirado');
         },
       });
-  }
-
-  hasError(fieldName: string): boolean {
-    const field = this.form.get(fieldName);
-    return !!(field && field.invalid && field.touched);
-  }
-
-  getErrorMessage(fieldName: string): string {
-    const field = this.form.get(fieldName);
-    if (!field?.errors) return '';
-    if (field.errors['required']) return 'Campo obrigatório';
-    if (field.errors['minlength']) return 'Mínimo de 6 caracteres';
-    return '';
   }
 }
