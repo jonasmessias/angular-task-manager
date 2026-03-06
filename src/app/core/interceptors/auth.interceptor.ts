@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -13,9 +13,22 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authenticatedReq).pipe(
     catchError((error) => {
-      if (error.status === HttpStatusCode.Unauthorized) {
-        authService.clearSessionAndRedirect();
+      // Só tenta refresh se for 401 E não for a própria requisição de refresh
+      if (error.status === HttpStatusCode.Unauthorized && !req.url.includes('/auth/refresh')) {
+        return authService.refreshToken().pipe(
+          switchMap((response) => {
+            const retryReq = req.clone({
+              setHeaders: { Authorization: `Bearer ${response.accessToken}` },
+            });
+            return next(retryReq);
+          }),
+          catchError((refreshError) => {
+            authService.clearSessionAndRedirect();
+            return throwError(() => refreshError);
+          }),
+        );
       }
+
       return throwError(() => error);
     }),
   );

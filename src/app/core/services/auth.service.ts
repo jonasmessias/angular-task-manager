@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, switchMap, tap } from 'rxjs';
+import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import type {
   AuthResponse,
   ForgotPasswordDto,
@@ -23,6 +23,29 @@ export class AuthService {
   );
 
   private readonly userSignal = signal<User | null>(null);
+
+  /**
+   * Inicializa o serviço: se já houver token salvo, carrega o perfil do usuário.
+   * Chamado pelo APP_INITIALIZER no bootstrap da aplicação.
+   */
+  init(): Observable<User | null> {
+    if (!this.accessTokenSignal()) {
+      return of(null);
+    }
+
+    return this.getProfile().pipe(
+      catchError(() => {
+        // Token expirado ou inválido — tenta refresh antes de limpar
+        return this.refreshToken().pipe(
+          switchMap(() => this.getProfile()),
+          catchError(() => {
+            this.clearSession();
+            return of(null);
+          }),
+        );
+      }),
+    );
+  }
 
   login(dto: LoginDto): Observable<User> {
     return this.http.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, dto).pipe(
