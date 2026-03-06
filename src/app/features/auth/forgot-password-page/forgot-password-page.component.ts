@@ -23,43 +23,41 @@ import { AppInputComponent } from '@shared/ui/input/app-input.component';
     AppInputComponent,
   ],
   template: `
-    <div class="auth-page max-w-md mx-auto mt-24 px-4">
-      <app-page-card title="Recuperar Senha">
-        @if (!submitted()) {
-          <p class="text-sm text-muted-foreground mb-4">
-            Informe seu email e enviaremos um link para redefinir sua senha.
+    <app-page-card title="Recuperar Senha">
+      @if (!submitted()) {
+        <p class="text-sm text-muted-foreground mb-4">
+          Informe seu email e enviaremos um link para redefinir sua senha.
+        </p>
+
+        <app-form (submitted)="onSubmit()">
+          <app-input
+            label="Email"
+            type="email"
+            placeholder="seu@email.com"
+            [control]="form.get('email')"
+            [required]="true"
+          />
+
+          <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
+            Enviar Link
+          </app-button>
+        </app-form>
+
+        <p class="text-center text-sm mt-4">
+          <a routerLink="/login" class="text-primary hover:underline">Voltar para Login</a>
+        </p>
+      } @else {
+        <div class="text-center space-y-4">
+          <p class="text-green-600 dark:text-green-400 font-medium">Email enviado com sucesso!</p>
+          <p class="text-sm text-muted-foreground">
+            Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.
           </p>
-
-          <app-form (submitted)="onSubmit()">
-            <app-input
-              label="Email"
-              type="email"
-              placeholder="seu@email.com"
-              [control]="form.get('email')"
-              [required]="true"
-            />
-
-            <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
-              Enviar Link
-            </app-button>
-          </app-form>
-
-          <p class="text-center text-sm mt-4">
-            <a routerLink="/login" class="text-primary hover:underline">Voltar para Login</a>
-          </p>
-        } @else {
-          <div class="text-center space-y-4">
-            <p class="text-green-600 dark:text-green-400 font-medium">Email enviado com sucesso!</p>
-            <p class="text-sm text-muted-foreground">
-              Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.
-            </p>
-            <a routerLink="/login">
-              <app-button variant="outline" [class]="'w-full'">Voltar para Login</app-button>
-            </a>
-          </div>
-        }
-      </app-page-card>
-    </div>
+          <a routerLink="/login">
+            <app-button variant="outline" [class]="'w-full'">Voltar para Login</app-button>
+          </a>
+        </div>
+      }
+    </app-page-card>
   `,
 })
 export class ForgotPasswordPageComponent {

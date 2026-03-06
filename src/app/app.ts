@@ -13,7 +13,6 @@ import { ZardToastComponent } from './shared/components/toast/toast.component';
   styleUrl: './app.css',
 })
 export class App {
-  // Injecting ThemeService here ensures it's instantiated at app startup,
-  // applying the persisted theme before any component renders.
+  // ThemeService is injected here to be instantiated before the first render.
   private readonly _theme = inject(ThemeService);
 }

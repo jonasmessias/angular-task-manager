@@ -48,7 +48,10 @@ import { ZardInputVariants } from '../../components/input/input.variants';
               (click)="toggleVisibility()"
               [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
             >
-              <z-icon [zType]="showPassword() ? 'eye-off' : 'eye'" class="size-4 pointer-events-none" />
+              <z-icon
+                [zType]="showPassword() ? 'eye-off' : 'eye'"
+                class="size-4 pointer-events-none"
+              />
             </button>
           }
         </div>

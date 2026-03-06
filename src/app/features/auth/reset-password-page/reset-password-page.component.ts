@@ -23,42 +23,40 @@ import { AppInputComponent } from '@shared/ui/input/app-input.component';
     AppInputComponent,
   ],
   template: `
-    <div class="auth-page max-w-md mx-auto mt-24 px-4">
-      <app-page-card title="Redefinir Senha">
-        @if (!submitted()) {
-          <app-form (submitted)="onSubmit()">
-            <app-input
-              label="Nova Senha"
-              type="password"
-              placeholder="••••••"
-              [control]="form.get('newPassword')"
-              [required]="true"
-            />
+    <app-page-card title="Redefinir Senha">
+      @if (!submitted()) {
+        <app-form (submitted)="onSubmit()">
+          <app-input
+            label="Nova Senha"
+            type="password"
+            placeholder="••••••"
+            [control]="form.get('newPassword')"
+            [required]="true"
+          />
 
-            <app-input
-              label="Confirmar Nova Senha"
-              type="password"
-              placeholder="••••••"
-              [control]="form.get('confirmNewPassword')"
-              [required]="true"
-            />
+          <app-input
+            label="Confirmar Nova Senha"
+            type="password"
+            placeholder="••••••"
+            [control]="form.get('confirmNewPassword')"
+            [required]="true"
+          />
 
-            <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
-              Redefinir Senha
-            </app-button>
-          </app-form>
-        } @else {
-          <div class="text-center space-y-4">
-            <p class="text-green-600 dark:text-green-400 font-medium">
-              Senha redefinida com sucesso!
-            </p>
-            <a routerLink="/login">
-              <app-button variant="outline" [class]="'w-full'">Ir para o Login</app-button>
-            </a>
-          </div>
-        }
-      </app-page-card>
-    </div>
+          <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
+            Redefinir Senha
+          </app-button>
+        </app-form>
+      } @else {
+        <div class="text-center space-y-4">
+          <p class="text-green-600 dark:text-green-400 font-medium">
+            Senha redefinida com sucesso!
+          </p>
+          <a routerLink="/login">
+            <app-button variant="outline" [class]="'w-full'">Ir para o Login</app-button>
+          </a>
+        </div>
+      }
+    </app-page-card>
   `,
 })
 export class ResetPasswordPageComponent {

@@ -37,8 +37,7 @@ export const API_ENDPOINTS = {
   },
 
   CARDS: {
-    ALL: (boardId: string, listId: string) =>
-      `${BASE}/boards/${boardId}/lists/${listId}/cards`,
+    ALL: (boardId: string, listId: string) => `${BASE}/boards/${boardId}/lists/${listId}/cards`,
     BY_ID: (boardId: string, listId: string, cardId: string) =>
       `${BASE}/boards/${boardId}/lists/${listId}/cards/${cardId}`,
   },
