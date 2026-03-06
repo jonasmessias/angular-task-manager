@@ -1,9 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
 import { computed, inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { StorageKeys } from '../enums/storage-keys.enum';
 
 export type Theme = 'dark' | 'light';
 
-const STORAGE_KEY = 'taskmanager-theme';
 const DEFAULT_THEME: Theme = 'dark';
 
 @Injectable({ providedIn: 'root' })
@@ -24,23 +24,18 @@ export class ThemeService {
     this._theme.set(next);
     this.applyTheme(next);
     if (this.isBrowser) {
-      localStorage.setItem(STORAGE_KEY, next);
+      localStorage.setItem(StorageKeys.THEME, next);
     }
   }
 
   private loadTheme(): Theme {
     if (!this.isBrowser) return DEFAULT_THEME;
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
+    const stored = localStorage.getItem(StorageKeys.THEME) as Theme | null;
     return stored === 'light' || stored === 'dark' ? stored : DEFAULT_THEME;
   }
 
   private applyTheme(theme: Theme): void {
     if (!this.isBrowser) return;
-    const html = document.documentElement;
-    if (theme === 'dark') {
-      html.classList.add('dark');
-    } else {
-      html.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', theme === 'dark');
   }
 }
