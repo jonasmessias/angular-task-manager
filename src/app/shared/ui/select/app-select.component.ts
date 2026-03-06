@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import type { ClassValue } from 'clsx';
 
@@ -66,7 +74,21 @@ export class AppSelectComponent {
 
   readonly valueChange = output<string>();
 
+  private readonly _tick = signal(0);
+
+  constructor() {
+    let sub: { unsubscribe(): void } | undefined;
+
+    effect(() => {
+      sub?.unsubscribe();
+      const ctrl = this.control();
+      if (!ctrl) return;
+      sub = ctrl.events.subscribe(() => this._tick.update((v) => v + 1));
+    });
+  }
+
   readonly errorText = computed(() => {
+    this._tick();
     if (this.error()) return this.error();
     const ctrl = this.control();
     if (ctrl?.invalid && ctrl?.touched) return this.extractError(ctrl);
