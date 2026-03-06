@@ -1,4 +1,4 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
+/* To learn more about Typescript configuration file: https://www.typescriptlang.org/tsconfig. */
 /* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
@@ -17,6 +17,7 @@
     "ignoreDeprecations": "5.0",
     "baseUrl": "./",
     "paths": {
+      "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@ui": ["src/app/shared/ui/index.ts"],
       "@ui/*": ["src/app/shared/ui/*"]
