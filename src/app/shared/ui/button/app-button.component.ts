@@ -10,7 +10,7 @@ import { ZardIcon } from '../../components/icon/icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ZardButtonComponent, ZardIconComponent],
   template: `
-    <button z-button [zType]="variant()" [zSize]="size()" [zLoading]="loading()" [class]="class()">
+    <button z-button [type]="type()" [zType]="variant()" [zSize]="size()" [zLoading]="loading()" [class]="class()">
       @if (icon()) {
         <z-icon [zType]="icon()!" class="size-4" />
       }
@@ -19,6 +19,7 @@ import { ZardIcon } from '../../components/icon/icons';
   `,
 })
 export class AppButtonComponent {
+  readonly type = input<'button' | 'submit' | 'reset'>('button');
   readonly variant = input<ZardButtonVariants['zType']>('default');
   readonly size = input<ZardButtonVariants['zSize']>('default');
   readonly icon = input<ZardIcon | null>(null);
