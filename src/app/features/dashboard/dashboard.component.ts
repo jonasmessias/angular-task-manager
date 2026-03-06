@@ -1,20 +1,23 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+
 import { AuthService } from '../../core/services/auth.service';
+import { PageHeaderComponent } from '../../shared/ui/page-header/page-header.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [PageHeaderComponent],
   template: `
-    <div class="p-8">
-      <div class="mb-8">
-        <h1 class="text-2xl font-bold text-foreground">Bem-vindo de volta, {{ userName }}! 👋</h1>
-        <p class="text-muted-foreground mt-1">Aqui está um resumo das suas atividades.</p>
-      </div>
+    <div class="p-6">
+      <app-page-header
+        [title]="'Bem-vindo de volta, ' + userName() + '! 👋'"
+        subtitle="Aqui está um resumo das suas atividades."
+      />
     </div>
   `,
 })
 export class DashboardComponent {
   private authService = inject(AuthService);
-  userName = this.authService.currentUser?.name ?? 'Usuário';
+  readonly userName = computed(() => this.authService.currentUser?.name ?? 'Usuário');
 }
