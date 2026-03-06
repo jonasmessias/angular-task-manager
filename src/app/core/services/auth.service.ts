@@ -57,15 +57,16 @@ export class AuthService {
   }
 
   login(dto: LoginDto): Observable<AuthResponse> {
-    return this.http
-      .post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, dto)
-      .pipe(tap((response) => this.saveSession(response)));
+    return this.http.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, dto).pipe(
+      tap((response) => this.saveSession(response)),
+      switchMap((response) => this.getProfile().pipe(switchMap(() => of(response)))),
+    );
   }
 
-  register(dto: RegisterDto): Observable<AuthResponse> {
+  register(dto: RegisterDto): Observable<void> {
     return this.http
-      .post<AuthResponse>(API_ENDPOINTS.AUTH.REGISTER, dto)
-      .pipe(tap((response) => this.saveSession(response)));
+      .post(API_ENDPOINTS.AUTH.REGISTER, dto, { responseType: 'text' })
+      .pipe(switchMap(() => of(undefined as void)));
   }
 
   logout(): void {
@@ -83,6 +84,13 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
+  clearSession(): void {
+    this._accessToken.set(null);
+    this._currentUser.set(null);
+    localStorage.removeItem(StorageKeys.ACCESS_TOKEN);
+    localStorage.removeItem(StorageKeys.REFRESH_TOKEN);
+  }
+
   forgotPassword(dto: ForgotPasswordDto): Observable<void> {
     return this.http.post<void>(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, dto);
   }
@@ -92,11 +100,15 @@ export class AuthService {
   }
 
   verifyEmail(dto: VerifyEmailDto): Observable<void> {
-    return this.http.post<void>(API_ENDPOINTS.AUTH.VERIFY_EMAIL, dto);
+    return this.http
+      .post(API_ENDPOINTS.AUTH.VERIFY_EMAIL, dto, { responseType: 'text' })
+      .pipe(switchMap(() => of(undefined as void)));
   }
 
   resendVerification(dto: ResendVerificationDto): Observable<void> {
-    return this.http.post<void>(API_ENDPOINTS.AUTH.RESEND_VERIFICATION, dto);
+    return this.http
+      .post(API_ENDPOINTS.AUTH.RESEND_VERIFICATION, dto, { responseType: 'text' })
+      .pipe(switchMap(() => of(undefined as void)));
   }
 
   refreshToken(): Observable<AuthResponse> {
@@ -116,12 +128,5 @@ export class AuthService {
     this._accessToken.set(response.accessToken);
     localStorage.setItem(StorageKeys.ACCESS_TOKEN, response.accessToken);
     localStorage.setItem(StorageKeys.REFRESH_TOKEN, response.refreshToken);
-  }
-
-  private clearSession(): void {
-    this._accessToken.set(null);
-    this._currentUser.set(null);
-    localStorage.removeItem(StorageKeys.ACCESS_TOKEN);
-    localStorage.removeItem(StorageKeys.REFRESH_TOKEN);
   }
 }
