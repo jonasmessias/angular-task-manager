@@ -31,11 +31,39 @@ import { RegisterDto } from '../models/auth.model';
         }
 
         <app-form (submitted)="onSubmit()">
-          <app-input label="Nome" placeholder="Seu nome" [control]="form.get('name')" [required]="true" />
-          <app-input label="Username" placeholder="seu_username" [control]="form.get('username')" [required]="true" />
-          <app-input label="Email" type="email" placeholder="seu@email.com" [control]="form.get('email')" [required]="true" />
-          <app-input label="Senha" type="password" placeholder="••••••" [control]="form.get('password')" [required]="true" />
-          <app-input label="Confirmar Senha" type="password" placeholder="••••••" [control]="form.get('confirmPassword')" [required]="true" />
+          <app-input
+            label="Nome"
+            placeholder="Seu nome"
+            [control]="form.get('name')"
+            [required]="true"
+          />
+          <app-input
+            label="Username"
+            placeholder="seu_username"
+            [control]="form.get('username')"
+            [required]="true"
+          />
+          <app-input
+            label="Email"
+            type="email"
+            placeholder="seu@email.com"
+            [control]="form.get('email')"
+            [required]="true"
+          />
+          <app-input
+            label="Senha"
+            type="password"
+            placeholder="••••••"
+            [control]="form.get('password')"
+            [required]="true"
+          />
+          <app-input
+            label="Confirmar Senha"
+            type="password"
+            placeholder="••••••"
+            [control]="form.get('confirmPassword')"
+            [required]="true"
+          />
 
           <app-button type="submit" [loading]="isLoading()" [class]="'w-full'">
             Criar Conta
@@ -59,10 +87,10 @@ export class RegisterPageComponent {
   readonly errorMessage = signal<string | null>(null);
 
   readonly form = this.fb.group({
-    name:            ['', [Validators.required]],
-    username:        ['', [Validators.required]],
-    email:           ['', [Validators.required, Validators.email]],
-    password:        ['', [Validators.required, Validators.minLength(6)]],
+    name: ['', [Validators.required]],
+    username: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required]],
   });
 

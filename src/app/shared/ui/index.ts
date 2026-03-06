@@ -13,7 +13,7 @@ export { PageCardComponent } from './card/page-card.component';
 
 // Badge semântico
 export { StatusBadgeComponent } from './badge/status-badge.component';
-export type { TaskStatus, TaskPriority } from './badge/status-badge.component';
+export type { TaskPriority, TaskStatus } from './badge/status-badge.component';
 
 // Cabeçalho de página
 export { PageHeaderComponent } from './page-header/page-header.component';

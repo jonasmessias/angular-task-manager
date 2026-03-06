@@ -11,7 +11,13 @@ import { LoginDto } from '../../models/auth.model';
   selector: 'app-login-form',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterModule, AppFormComponent, AppInputComponent, AppButtonComponent],
+  imports: [
+    ReactiveFormsModule,
+    RouterModule,
+    AppFormComponent,
+    AppInputComponent,
+    AppButtonComponent,
+  ],
   template: `
     <app-form (submitted)="onSubmit()">
       <app-input
@@ -35,13 +41,7 @@ import { LoginDto } from '../../models/auth.model';
         </a>
       </div>
 
-      <app-button
-        type="submit"
-        [loading]="isLoading()"
-        [class]="'w-full'"
-      >
-        Entrar
-      </app-button>
+      <app-button type="submit" [loading]="isLoading()" [class]="'w-full'"> Entrar </app-button>
     </app-form>
   `,
 })

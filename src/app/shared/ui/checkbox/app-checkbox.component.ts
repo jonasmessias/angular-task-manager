@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import type { ClassValue } from 'clsx';
 
 import { ZardCheckboxComponent } from '../../components/checkbox/checkbox.component';

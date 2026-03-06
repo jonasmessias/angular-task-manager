@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import type { ClassValue } from 'clsx';
 
 import {
-  ZardFormFieldComponent,
   ZardFormControlComponent,
+  ZardFormFieldComponent,
   ZardFormLabelComponent,
 } from '../../components/form/form.component';
 import { ZardInputDirective } from '../../components/input/input.directive';
 import { ZardInputVariants } from '../../components/input/input.variants';
-import { mergeClasses } from '../../utils/merge-classes';
 
 @Component({
   selector: 'app-input',

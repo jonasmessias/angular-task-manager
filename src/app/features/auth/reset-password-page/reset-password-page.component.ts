@@ -53,7 +53,9 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
           </app-form>
         } @else {
           <div class="text-center space-y-4">
-            <p class="text-green-600 dark:text-green-400 font-medium">Senha redefinida com sucesso!</p>
+            <p class="text-green-600 dark:text-green-400 font-medium">
+              Senha redefinida com sucesso!
+            </p>
             <a routerLink="/login">
               <app-button variant="outline" [class]="'w-full'">Ir para o Login</app-button>
             </a>
@@ -76,7 +78,7 @@ export class ResetPasswordPageComponent implements OnInit {
   readonly submitted = signal(false);
 
   readonly form = this.fb.group({
-    newPassword:        ['', [Validators.required, Validators.minLength(6)]],
+    newPassword: ['', [Validators.required, Validators.minLength(6)]],
     confirmNewPassword: ['', [Validators.required]],
   });
 
@@ -104,7 +106,11 @@ export class ResetPasswordPageComponent implements OnInit {
     this.errorMessage.set(null);
 
     this.authService
-      .resetPassword({ token: this.token, newPassword: newPassword!, confirmNewPassword: confirmNewPassword! })
+      .resetPassword({
+        token: this.token,
+        newPassword: newPassword!,
+        confirmNewPassword: confirmNewPassword!,
+      })
       .subscribe({
         next: () => {
           this.isLoading.set(false);
