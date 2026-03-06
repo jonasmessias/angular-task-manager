@@ -36,7 +36,10 @@ type PageState = 'verifying' | 'verified' | 'token-error' | 'resend' | 'from-reg
     AppInputComponent,
   ],
   template: `
-    <app-page-card title="Verificação de Email">
+    <app-page-card>
+      <h2 slot="title" class="text-2xl font-semibold leading-none tracking-tight text-center mb-6">
+        Verificação de Email
+      </h2>
       <div class="flex flex-col items-center gap-6 py-2">
         <!-- ── FROM REGISTER (post-signup flow) ── -->
         @if (state() === 'from-register') {
@@ -141,7 +144,7 @@ type PageState = 'verifying' | 'verified' | 'token-error' | 'resend' | 'from-reg
           </div>
 
           <!-- Actions -->
-          <div class="w-full space-y-3">
+          <div class="w-full flex flex-col gap-3">
             <app-button
               [class]="'w-full'"
               [loading]="isLoading()"
@@ -191,6 +194,59 @@ type PageState = 'verifying' | 'verified' | 'token-error' | 'resend' | 'from-reg
 
         <!-- ── VERIFIED (success) ── -->
         @if (state() === 'verified') {
+          <!-- Steps — all complete -->
+          <div class="flex items-center w-full gap-0 mb-2">
+            <div class="flex flex-col items-center flex-1">
+              <div
+                class="flex items-center justify-center size-8 rounded-full bg-green-500 text-white text-xs font-bold"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="size-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </div>
+              <span class="text-xs text-green-500 font-medium mt-1">Cadastro</span>
+            </div>
+            <div class="flex-1 h-px bg-green-500 mb-4"></div>
+            <div class="flex flex-col items-center flex-1">
+              <div
+                class="flex items-center justify-center size-8 rounded-full bg-green-500 text-white text-xs font-bold"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="size-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </div>
+              <span class="text-xs text-green-500 font-medium mt-1">Verificação</span>
+            </div>
+            <div class="flex-1 h-px bg-primary mb-4"></div>
+            <div class="flex flex-col items-center flex-1">
+              <div
+                class="flex items-center justify-center size-8 rounded-full bg-primary text-primary-foreground text-xs font-bold ring-4 ring-primary/20"
+              >
+                3
+              </div>
+              <span class="text-xs text-primary font-medium mt-1">Acesso</span>
+            </div>
+          </div>
+
+          <!-- Icon -->
           <div
             class="flex items-center justify-center size-20 rounded-full bg-green-500/10 text-green-500"
           >
@@ -207,10 +263,11 @@ type PageState = 'verifying' | 'verified' | 'token-error' | 'resend' | 'from-reg
               <path d="M20 6 9 17l-5-5" />
             </svg>
           </div>
+
           <div class="text-center space-y-1">
             <p class="font-semibold text-foreground">Email verificado com sucesso! 🎉</p>
             <p class="text-sm text-muted-foreground">
-              Sua conta está ativa. Redirecionando para o app em
+              Sua conta está ativa. Redirecionando para o login em
               <span class="font-semibold text-foreground">{{ redirectCountdown() }}s</span>...
             </p>
           </div>
@@ -474,7 +531,7 @@ export class VerifyEmailPageComponent implements OnInit, OnDestroy {
   }
 
   private startRedirectCountdown(): void {
-    this.redirectCountdown.set(3);
+    this.redirectCountdown.set(5);
     this.redirectIntervalId = setInterval(() => {
       const current = this.redirectCountdown();
       if (current <= 1) {

@@ -1,6 +1,13 @@
 import type { ClassValue } from 'clsx';
 
-import { ChangeDetectionStrategy, Component, computed, input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  TemplateRef,
+  ViewEncapsulation,
+} from '@angular/core';
 
 import { mergeClasses } from '@shared/utils/merge-classes';
 import { ZardStringTemplateOutletDirective } from '../core/directives/string-template-outlet/string-template-outlet.directive';
@@ -22,7 +29,9 @@ import { cardBodyVariants, cardHeaderVariants, cardVariants } from './card.varia
 
         @if (zDescription()) {
           <div class="text-sm text-muted-foreground">
-            <ng-container *zStringTemplateOutlet="zDescription()">{{ zDescription() }}</ng-container>
+            <ng-container *zStringTemplateOutlet="zDescription()">{{
+              zDescription()
+            }}</ng-container>
           </div>
         }
       </div>
