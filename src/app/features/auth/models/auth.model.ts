@@ -5,6 +5,8 @@ export interface User {
   email: string;
 }
 
+// ── Auth DTOs ────────────────────────────────────────────────────────────────
+
 export interface LoginDto {
   emailOrUsername: string;
   password: string;
@@ -28,6 +30,14 @@ export interface ResetPasswordDto {
   confirmNewPassword: string;
 }
 
+export interface VerifyEmailDto {
+  token: string;
+}
+
+export interface ResendVerificationDto {
+  email: string;
+}
+
 export interface RefreshTokenDto {
   refreshToken: string;
 }
@@ -35,6 +45,8 @@ export interface RefreshTokenDto {
 export interface LogoutDto {
   refreshToken: string;
 }
+
+// ── Auth Responses ───────────────────────────────────────────────────────────
 
 export interface AuthResponse {
   name: string;
