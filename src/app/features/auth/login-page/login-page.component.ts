@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
@@ -46,9 +47,9 @@ export class LoginPageComponent {
         this.isLoading.set(false);
         this.router.navigate(['/']);
       },
-      error: (err: Error) => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.message || 'Erro ao fazer login');
+        this.errorMessage.set(err.error?.message || 'Erro ao fazer login');
       },
     });
   }

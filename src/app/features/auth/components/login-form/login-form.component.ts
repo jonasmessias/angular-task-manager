@@ -53,7 +53,7 @@ export class LoginFormComponent {
 
   readonly form = this.fb.group({
     emailOrUsername: ['', [Validators.required]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
   onSubmit(): void {

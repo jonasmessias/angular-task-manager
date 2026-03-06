@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -55,10 +56,10 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
           <div class="text-center space-y-4">
             <p class="text-green-600 dark:text-green-400 font-medium">Email enviado com sucesso!</p>
             <p class="text-sm text-muted-foreground">
-              Verifique sua caixa de entrada e siga as instruÃ§Ãµes para redefinir sua senha.
+              Verifique sua caixa de entrada e siga as instruções para redefinir sua senha.
             </p>
             <a routerLink="/login">
-              <button z-button zType="outline" class="w-full">Voltar para Login</button>
+              <app-button variant="outline" [class]="'w-full'">Voltar para Login</app-button>
             </a>
           </div>
         }
@@ -92,9 +93,9 @@ export class ForgotPasswordPageComponent {
         this.isLoading.set(false);
         this.submitted.set(true);
       },
-      error: (err: Error) => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.message || 'Erro ao enviar email');
+        this.errorMessage.set(err.error?.message || 'Erro ao enviar email');
       },
     });
   }

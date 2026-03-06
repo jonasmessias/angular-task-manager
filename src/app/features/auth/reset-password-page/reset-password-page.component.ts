@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -78,7 +79,7 @@ export class ResetPasswordPageComponent implements OnInit {
   readonly submitted = signal(false);
 
   readonly form = this.fb.group({
-    newPassword: ['', [Validators.required, Validators.minLength(6)]],
+    newPassword: ['', [Validators.required, Validators.minLength(8)]],
     confirmNewPassword: ['', [Validators.required]],
   });
 
@@ -116,9 +117,9 @@ export class ResetPasswordPageComponent implements OnInit {
           this.isLoading.set(false);
           this.submitted.set(true);
         },
-        error: (err: Error) => {
+        error: (err: HttpErrorResponse) => {
           this.isLoading.set(false);
-          this.errorMessage.set(err.message || 'Token inválido ou expirado');
+          this.errorMessage.set(err.error?.message || 'Token inválido ou expirado');
         },
       });
   }

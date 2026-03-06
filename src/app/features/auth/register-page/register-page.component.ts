@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -90,7 +91,7 @@ export class RegisterPageComponent {
     name: ['', [Validators.required]],
     username: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required]],
   });
 
@@ -100,17 +101,24 @@ export class RegisterPageComponent {
       return;
     }
 
+    const { confirmPassword, ...rest } = this.form.value;
+
+    if (rest.password !== confirmPassword) {
+      this.errorMessage.set('As senhas não coincidem');
+      return;
+    }
+
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    this.authService.register(this.form.value as RegisterDto).subscribe({
+    this.authService.register(rest as RegisterDto).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/']);
       },
-      error: (err: Error) => {
+      error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.message || 'Erro ao criar conta');
+        this.errorMessage.set(err.error?.message || 'Erro ao criar conta');
       },
     });
   }
