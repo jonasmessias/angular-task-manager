@@ -7,6 +7,7 @@ import {
   ZardFormFieldComponent,
   ZardFormLabelComponent,
 } from '../../components/form/form.component';
+import { ZardIconComponent } from '../../components/icon/icon.component';
 import { ZardInputDirective } from '../../components/input/input.directive';
 import { ZardInputVariants } from '../../components/input/input.variants';
 
@@ -20,6 +21,7 @@ import { ZardInputVariants } from '../../components/input/input.variants';
     ZardFormLabelComponent,
     ZardFormControlComponent,
     ZardInputDirective,
+    ZardIconComponent,
   ],
   template: `
     <z-form-field [class]="class()">
@@ -27,15 +29,29 @@ import { ZardInputVariants } from '../../components/input/input.variants';
         <z-form-label [zRequired]="required()">{{ label() }}</z-form-label>
       }
       <z-form-control [errorMessage]="errorText()">
-        <input
-          z-input
-          [type]="type()"
-          [placeholder]="placeholder()"
-          [zSize]="size()"
-          [zStatus]="inputStatus()"
-          [formControl]="$any(control())"
-          [class]="inputClass()"
-        />
+        <div class="relative flex items-center">
+          <input
+            z-input
+            [type]="resolvedType()"
+            [placeholder]="placeholder()"
+            [zSize]="size()"
+            [zStatus]="inputStatus()"
+            [formControl]="$any(control())"
+            [class]="inputClass()"
+            [class.pr-10]="isPassword()"
+          />
+          @if (isPassword()) {
+            <button
+              type="button"
+              tabindex="-1"
+              class="absolute right-3 text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+              (click)="toggleVisibility()"
+              [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+            >
+              <z-icon [zType]="showPassword() ? 'eye-off' : 'eye'" class="size-4 pointer-events-none" />
+            </button>
+          }
+        </div>
       </z-form-control>
     </z-form-field>
   `,
@@ -53,6 +69,16 @@ export class AppInputComponent {
   readonly status = input<ZardInputVariants['zStatus']>();
   readonly class = input<ClassValue>('');
   readonly inputClass = input<ClassValue>('');
+
+  readonly isPassword = computed(() => this.type() === 'password');
+  readonly showPassword = signal(false);
+  readonly resolvedType = computed(() =>
+    this.isPassword() && this.showPassword() ? 'text' : this.type(),
+  );
+
+  toggleVisibility(): void {
+    this.showPassword.update((v) => !v);
+  }
 
   /** Internal tick signal incremented on every control event (value, status, touched). */
   private readonly _tick = signal(0);
