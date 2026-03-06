@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AppSidebarComponent } from './components/sidebar/sidebar.component';
@@ -6,6 +6,7 @@ import { AppSidebarComponent } from './components/sidebar/sidebar.component';
 @Component({
   selector: 'app-private-layout',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterOutlet, NavbarComponent, AppSidebarComponent],
   template: `
     <div class="flex flex-col h-screen w-screen overflow-hidden bg-background">

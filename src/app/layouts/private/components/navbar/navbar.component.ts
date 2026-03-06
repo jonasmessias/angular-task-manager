@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ZardIconComponent } from '../../../../shared/components/icon/icon.component';
@@ -7,6 +7,7 @@ import { AvatarMenuComponent } from './avatar-menu/avatar-menu.component';
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, ZardIconComponent, AvatarMenuComponent],
   template: `
     <header class="flex items-center h-12 px-2 gap-3 bg-background shrink-0">
@@ -78,10 +79,10 @@ import { AvatarMenuComponent } from './avatar-menu/avatar-menu.component';
 export class NavbarComponent {
   private readonly authService = inject(AuthService);
 
-  readonly userName = computed(() => this.authService.currentUser?.name ?? 'Usuário');
-  readonly userEmail = computed(() => this.authService.currentUser?.email ?? '');
+  readonly userName = computed(() => this.authService.currentUser()?.name ?? 'Usuário');
+  readonly userEmail = computed(() => this.authService.currentUser()?.email ?? '');
   readonly userInitial = computed(() =>
-    (this.authService.currentUser?.name?.[0] ?? 'U').toUpperCase(),
+    (this.authService.currentUser()?.name?.[0] ?? 'U').toUpperCase(),
   );
 
   logout(): void {
