@@ -1,11 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ThemeService } from './core/services/theme.service';
+import { ZardToastComponent } from './shared/components/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
+  imports: [RouterOutlet, ZardToastComponent],
+  template: `
+    <router-outlet />
+    <z-toaster [richColors]="true" position="bottom-right" />
+  `,
   styleUrl: './app.css',
 })
 export class App {

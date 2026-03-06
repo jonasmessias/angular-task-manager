@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
 import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
 import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
@@ -28,12 +29,6 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
           <p class="text-sm text-muted-foreground mb-4">
             Informe seu email e enviaremos um link para redefinir sua senha.
           </p>
-
-          @if (errorMessage()) {
-            <div class="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
-              {{ errorMessage() }}
-            </div>
-          }
 
           <app-form (submitted)="onSubmit()">
             <app-input
@@ -68,11 +63,11 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
   `,
 })
 export class ForgotPasswordPageComponent {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
+  private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly toast = inject(ToastService);
 
   readonly isLoading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
   readonly submitted = signal(false);
 
   readonly form = this.fb.group({
@@ -86,7 +81,6 @@ export class ForgotPasswordPageComponent {
     }
 
     this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     this.authService.forgotPassword(this.form.value as { email: string }).subscribe({
       next: () => {
@@ -95,7 +89,7 @@ export class ForgotPasswordPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'Erro ao enviar email');
+        this.toast.error(err.error?.message || 'Failed to send recovery email');
       },
     });
   }

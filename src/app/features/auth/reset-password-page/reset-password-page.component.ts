@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
 import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
 import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
@@ -25,12 +26,6 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
     <div class="auth-page max-w-md mx-auto mt-24 px-4">
       <app-page-card title="Redefinir Senha">
         @if (!submitted()) {
-          @if (errorMessage()) {
-            <div class="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
-              {{ errorMessage() }}
-            </div>
-          }
-
           <app-form (submitted)="onSubmit()">
             <app-input
               label="Nova Senha"
@@ -67,15 +62,15 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
   `,
 })
 export class ResetPasswordPageComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   private token = '';
 
   readonly isLoading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
   readonly submitted = signal(false);
 
   readonly form = this.fb.group({
@@ -99,12 +94,11 @@ export class ResetPasswordPageComponent implements OnInit {
     const { newPassword, confirmNewPassword } = this.form.value;
 
     if (newPassword !== confirmNewPassword) {
-      this.errorMessage.set('As senhas não coincidem');
+      this.toast.error('Passwords do not match');
       return;
     }
 
     this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     this.authService
       .resetPassword({
@@ -119,7 +113,7 @@ export class ResetPasswordPageComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.isLoading.set(false);
-          this.errorMessage.set(err.error?.message || 'Token inválido ou expirado');
+          this.toast.error(err.error?.message || 'Invalid or expired token');
         },
       });
   }

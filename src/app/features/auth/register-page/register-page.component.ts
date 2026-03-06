@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
 import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
 import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
@@ -25,12 +26,6 @@ import { RegisterDto } from '../models/auth.model';
   template: `
     <div class="auth-page max-w-md mx-auto mt-24 px-4">
       <app-page-card title="Criar Conta">
-        @if (errorMessage()) {
-          <div class="mb-2 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
-            {{ errorMessage() }}
-          </div>
-        }
-
         <app-form (submitted)="onSubmit()">
           <app-input
             label="Nome"
@@ -80,12 +75,12 @@ import { RegisterDto } from '../models/auth.model';
   `,
 })
 export class RegisterPageComponent {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
   readonly isLoading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
 
   readonly form = this.fb.group({
     name: ['', [Validators.required]],
@@ -104,12 +99,11 @@ export class RegisterPageComponent {
     const { confirmPassword, ...rest } = this.form.value;
 
     if (rest.password !== confirmPassword) {
-      this.errorMessage.set('As senhas não coincidem');
+      this.toast.error('Passwords do not match');
       return;
     }
 
     this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     this.authService.register(rest as RegisterDto).subscribe({
       next: () => {
@@ -118,7 +112,7 @@ export class RegisterPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'Erro ao criar conta');
+        this.toast.error(err.error?.message || 'Failed to create account');
       },
     });
   }

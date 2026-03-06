@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../shared/services/toast.service';
 import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
 import { LoginFormComponent } from '../components/login-form/login-form.component';
 import { LoginDto } from '../models/auth.model';
@@ -15,12 +16,6 @@ import { LoginDto } from '../models/auth.model';
   template: `
     <div class="auth-page max-w-md mx-auto mt-24">
       <app-page-card title="Login">
-        @if (errorMessage()) {
-          <div class="mb-4 p-3 bg-destructive/10 text-destructive rounded-md text-sm">
-            {{ errorMessage() }}
-          </div>
-        }
-
         <app-login-form [isLoading]="isLoading()" (loginSubmit)="onLogin($event)" />
 
         <div class="mt-4 text-sm text-center text-muted-foreground">
@@ -32,15 +27,14 @@ import { LoginDto } from '../models/auth.model';
   `,
 })
 export class LoginPageComponent {
-  private router = inject(Router);
-  private authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly toast = inject(ToastService);
 
   readonly isLoading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
 
   onLogin(dto: LoginDto): void {
     this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     this.authService.login(dto).subscribe({
       next: () => {
@@ -49,7 +43,7 @@ export class LoginPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'Erro ao fazer login');
+        this.toast.error(err.error?.message || 'Failed to sign in');
       },
     });
   }
