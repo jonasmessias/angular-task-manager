@@ -18,6 +18,6 @@ import { PageHeaderComponent } from '../../shared/ui/page-header/page-header.com
   `,
 })
 export class DashboardComponent {
-  private authService = inject(AuthService);
-  readonly userName = computed(() => this.authService.currentUser?.name ?? 'Usuário');
+  private readonly authService = inject(AuthService);
+  readonly userName = computed(() => this.authService.currentUser()?.name ?? 'Usuário');
 }
