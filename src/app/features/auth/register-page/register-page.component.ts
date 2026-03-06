@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../shared/services/toast.service';
-import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
-import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
-import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
-import { AppInputComponent } from '../../../shared/ui/input/app-input.component';
+import { AuthService } from '@core/services/auth.service';
+import { ToastService } from '@shared/services/toast.service';
+import { AppButtonComponent } from '@shared/ui/button/app-button.component';
+import { PageCardComponent } from '@shared/ui/card/page-card.component';
+import { AppFormComponent } from '@shared/ui/form/app-form.component';
+import { AppInputComponent } from '@shared/ui/input/app-input.component';
 import { RegisterDto } from '../models/auth.model';
 
 @Component({
@@ -96,23 +96,24 @@ export class RegisterPageComponent {
       return;
     }
 
-    const { confirmPassword, ...rest } = this.form.value;
+    const value = this.form.value;
 
-    if (rest.password !== confirmPassword) {
-      this.toast.error('Passwords do not match');
+    if (value.password !== value.confirmPassword) {
+      this.toast.error('As senhas não coincidem');
       return;
     }
 
     this.isLoading.set(true);
 
-    this.authService.register(rest as RegisterDto).subscribe({
+    this.authService.register(value as RegisterDto).subscribe({
       next: () => {
         this.isLoading.set(false);
+        this.toast.success('Conta criada com sucesso!');
         this.router.navigate(['/']);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.toast.error(err.error?.message || 'Failed to create account');
+        this.toast.error(err.error?.message ?? 'Falha ao criar conta');
       },
     });
   }

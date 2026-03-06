@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../shared/services/toast.service';
-import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
-import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
-import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
-import { AppInputComponent } from '../../../shared/ui/input/app-input.component';
+import { AuthService } from '@core/services/auth.service';
+import { ToastService } from '@shared/services/toast.service';
+import { AppButtonComponent } from '@shared/ui/button/app-button.component';
+import { PageCardComponent } from '@shared/ui/card/page-card.component';
+import { AppFormComponent } from '@shared/ui/form/app-form.component';
+import { AppInputComponent } from '@shared/ui/input/app-input.component';
 
 @Component({
   selector: 'app-forgot-password-page',
@@ -89,7 +89,7 @@ export class ForgotPasswordPageComponent {
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.toast.error(err.error?.message || 'Failed to send recovery email');
+        this.toast.error(err.error?.message ?? 'Falha ao enviar email de recuperação');
       },
     });
   }

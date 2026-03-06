@@ -1,14 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../shared/services/toast.service';
-import { AppButtonComponent } from '../../../shared/ui/button/app-button.component';
-import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
-import { AppFormComponent } from '../../../shared/ui/form/app-form.component';
-import { AppInputComponent } from '../../../shared/ui/input/app-input.component';
+import { AuthService } from '@core/services/auth.service';
+import { ToastService } from '@shared/services/toast.service';
+import { AppButtonComponent } from '@shared/ui/button/app-button.component';
+import { PageCardComponent } from '@shared/ui/card/page-card.component';
+import { AppFormComponent } from '@shared/ui/form/app-form.component';
+import { AppInputComponent } from '@shared/ui/input/app-input.component';
 
 @Component({
   selector: 'app-reset-password-page',
@@ -61,14 +61,13 @@ import { AppInputComponent } from '../../../shared/ui/input/app-input.component'
     </div>
   `,
 })
-export class ResetPasswordPageComponent implements OnInit {
+export class ResetPasswordPageComponent {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
-  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
 
-  private token = '';
+  private readonly token = inject(ActivatedRoute).snapshot.queryParamMap.get('token') ?? '';
 
   readonly isLoading = signal(false);
   readonly submitted = signal(false);
@@ -78,8 +77,7 @@ export class ResetPasswordPageComponent implements OnInit {
     confirmNewPassword: ['', [Validators.required]],
   });
 
-  ngOnInit(): void {
-    this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
+  constructor() {
     if (!this.token) {
       this.router.navigate(['/login']);
     }
@@ -94,7 +92,7 @@ export class ResetPasswordPageComponent implements OnInit {
     const { newPassword, confirmNewPassword } = this.form.value;
 
     if (newPassword !== confirmNewPassword) {
-      this.toast.error('Passwords do not match');
+      this.toast.error('As senhas não coincidem');
       return;
     }
 
@@ -110,10 +108,11 @@ export class ResetPasswordPageComponent implements OnInit {
         next: () => {
           this.isLoading.set(false);
           this.submitted.set(true);
+          this.toast.success('Senha redefinida com sucesso!');
         },
         error: (err: HttpErrorResponse) => {
           this.isLoading.set(false);
-          this.toast.error(err.error?.message || 'Invalid or expired token');
+          this.toast.error(err.error?.message ?? 'Token inválido ou expirado');
         },
       });
   }

@@ -2,9 +2,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../shared/services/toast.service';
-import { PageCardComponent } from '../../../shared/ui/card/page-card.component';
+import { AuthService } from '@core/services/auth.service';
+import { ToastService } from '@shared/services/toast.service';
+import { PageCardComponent } from '@shared/ui/card/page-card.component';
 import { LoginFormComponent } from '../components/login-form/login-form.component';
 import { LoginDto } from '../models/auth.model';
 
@@ -39,11 +39,12 @@ export class LoginPageComponent {
     this.authService.login(dto).subscribe({
       next: () => {
         this.isLoading.set(false);
+        this.toast.success('Login realizado com sucesso!');
         this.router.navigate(['/']);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
-        this.toast.error(err.error?.message || 'Failed to sign in');
+        this.toast.error(err.error?.message ?? 'Email/username ou senha inválidos');
       },
     });
   }
