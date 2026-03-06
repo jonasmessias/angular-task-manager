@@ -18,6 +18,12 @@
     "paths": {
       "@shared/*": [
         "src/app/shared/*"
+      ],
+      "@ui": [
+        "src/app/shared/ui/index.ts"
+      ],
+      "@ui/*": [
+        "src/app/shared/ui/*"
       ]
     }
   },
