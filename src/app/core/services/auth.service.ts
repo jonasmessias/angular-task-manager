@@ -7,8 +7,10 @@ import type {
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
+  ResendVerificationDto,
   ResetPasswordDto,
   User,
+  VerifyEmailDto,
 } from '../../features/auth/models/auth.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import { StorageKeys } from '../enums/storage-keys.enum';
@@ -81,6 +83,14 @@ export class AuthService {
 
   resetPassword(dto: ResetPasswordDto): Observable<void> {
     return this.http.post<void>(API_ENDPOINTS.AUTH.RESET_PASSWORD, dto);
+  }
+
+  verifyEmail(dto: VerifyEmailDto): Observable<void> {
+    return this.http.post<void>(API_ENDPOINTS.AUTH.VERIFY_EMAIL, dto);
+  }
+
+  resendVerification(dto: ResendVerificationDto): Observable<void> {
+    return this.http.post<void>(API_ENDPOINTS.AUTH.RESEND_VERIFICATION, dto);
   }
 
   refreshToken(): Observable<AuthResponse> {
