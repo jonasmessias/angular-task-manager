@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ZardIconComponent } from '../../../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive, ZardIconComponent],
   template: `
     <aside class="flex flex-col w-72 h-full bg-background shrink-0">

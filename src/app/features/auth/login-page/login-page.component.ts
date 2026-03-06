@@ -40,7 +40,7 @@ export class LoginPageComponent {
       next: () => {
         this.isLoading.set(false);
         this.toast.success('Login realizado com sucesso!');
-        this.router.navigate(['/app']);
+        this.router.navigate(['/']);
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);

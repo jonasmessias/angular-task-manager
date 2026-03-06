@@ -2,15 +2,6 @@ import { Routes } from '@angular/router';
 import { authGuard, guestGuard, redirectGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Redirects root path based on auth state
-  {
-    path: '',
-    pathMatch: 'full',
-    canActivate: [redirectGuard],
-    loadComponent: () =>
-      import('./layouts/public/public.layout').then((m) => m.PublicLayoutComponent),
-  },
-
   // Public routes
   {
     path: '',
@@ -59,13 +50,14 @@ export const routes: Routes = [
 
   // Private routes
   {
-    path: 'app',
-    canActivate: [authGuard],
+    path: '',
+    canActivate: [authGuard, redirectGuard],
     loadComponent: () =>
       import('./layouts/private/private.layout').then((m) => m.PrivateLayoutComponent),
     children: [
       {
         path: '',
+        pathMatch: 'full',
         loadComponent: () =>
           import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },

@@ -13,7 +13,7 @@ import { ZardCardComponent } from '../../components/card/card.component';
 
       <!-- Header padrão via input, renderizado só se não tiver slot customizado -->
       @if (title()) {
-        <div class="text-2xl font-semibold leading-none tracking-tight pb-0 mb-6 [&:has(~*)]:mb-1">
+        <div class="text-2xl font-semibold leading-none tracking-tight pb-6 [&:has(~*)]:mb-1">
           {{ title() }}
         </div>
         @if (description()) {
@@ -30,4 +30,3 @@ export class PageCardComponent {
   readonly title = input<string>('');
   readonly description = input<string>('');
 }
-

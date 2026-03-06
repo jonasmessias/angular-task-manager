@@ -11,7 +11,7 @@ import { AvatarMenuComponent } from './avatar-menu/avatar-menu.component';
   imports: [RouterLink, ZardIconComponent, AvatarMenuComponent],
   template: `
     <header class="flex items-center h-12 px-2 gap-3 bg-background shrink-0">
-      <a routerLink="/app" class="flex items-center gap-2 mr-2 shrink-0">
+      <a routerLink="/" class="flex items-center gap-2 mr-2 shrink-0">
         <z-icon zType="layers-2" class="text-primary size-5" />
         <span class="font-bold text-sm text-foreground">Task Manager</span>
       </a>
