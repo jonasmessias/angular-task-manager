@@ -22,9 +22,7 @@ export class AuthService {
     localStorage.getItem(StorageKeys.ACCESS_TOKEN),
   );
 
-  private readonly userSignal = signal<User | null>(
-    JSON.parse(localStorage.getItem(StorageKeys.USER_DATA) ?? 'null'),
-  );
+  private readonly userSignal = signal<User | null>(null);
 
   login(dto: LoginDto): Observable<User> {
     return this.http.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, dto).pipe(
@@ -47,6 +45,10 @@ export class AuthService {
       this.http.post(API_ENDPOINTS.AUTH.LOGOUT, { refreshToken }).subscribe();
     }
 
+    this.clearSessionAndRedirect();
+  }
+
+  clearSessionAndRedirect(): void {
     this.clearSession();
     this.router.navigate(['/login']);
   }
@@ -91,7 +93,6 @@ export class AuthService {
 
   private saveUser(user: User): void {
     this.userSignal.set(user);
-    localStorage.setItem(StorageKeys.USER_DATA, JSON.stringify(user));
   }
 
   private clearSession(): void {
@@ -99,6 +100,5 @@ export class AuthService {
     this.userSignal.set(null);
     localStorage.removeItem(StorageKeys.ACCESS_TOKEN);
     localStorage.removeItem(StorageKeys.REFRESH_TOKEN);
-    localStorage.removeItem(StorageKeys.USER_DATA);
   }
 }

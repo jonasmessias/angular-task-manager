@@ -3,7 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 /* ============================================================
    LIGHT THEME (default)
    ============================================================ */
@@ -44,43 +43,43 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
 
   /* App semantic tokens - Light */
-  --bg-primary:       #F0F2F5;
-  --bg-secondary:     #FFFFFF;
-  --bg-navbar:        #FFFFFF;
-  --bg-card:          #FFFFFF;
-  --bg-card-hover:    #F5F7FA;
-  --bg-input:         #F0F2F5;
-  --border-color:     #DDE1E7;
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-navbar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f5f7fa;
+  --bg-input: #f0f2f5;
+  --border-color: #dde1e7;
 
-  --text-primary:     #1A2332;
-  --text-secondary:   #4A5E72;
-  --text-muted:       #7A8FA6;
+  --text-primary: #1a2332;
+  --text-secondary: #4a5e72;
+  --text-muted: #7a8fa6;
 
-  --accent-primary:   #4A90D9;
-  --accent-hover:     #3A7BC8;
-  --success:          #2EA876;
-  --warning:          #D4922A;
-  --danger:           #CC4444;
+  --accent-primary: #4a90d9;
+  --accent-hover: #3a7bc8;
+  --success: #2ea876;
+  --warning: #d4922a;
+  --danger: #cc4444;
 
-  --scrollbar-track:  #F0F2F5;
-  --scrollbar-thumb:  #DDE1E7;
-  --scrollbar-hover:  #7A8FA6;
+  --scrollbar-track: #f0f2f5;
+  --scrollbar-thumb: #dde1e7;
+  --scrollbar-hover: #7a8fa6;
 
   /* Workspace avatar colors */
-  --workspace-blue:   #4A90D9;
-  --workspace-purple: #7C5CBF;
-  --workspace-teal:   #3DBE8A;
-  --workspace-amber:  #E8A838;
-  --workspace-red:    #E05555;
-  --workspace-cyan:   #2AABCC;
+  --workspace-blue: #4a90d9;
+  --workspace-purple: #7c5cbf;
+  --workspace-teal: #3dbe8a;
+  --workspace-amber: #e8a838;
+  --workspace-red: #e05555;
+  --workspace-cyan: #2aabcc;
 
   /* Board cover gradients */
-  --cover-ocean:  linear-gradient(135deg, #1A3A5C, #2AABCC);
-  --cover-forest: linear-gradient(135deg, #1E3D2F, #3DBE8A);
-  --cover-galaxy: linear-gradient(135deg, #3D1F4E, #7C5CBF);
-  --cover-sunset: linear-gradient(135deg, #4A2C1A, #E8A838);
-  --cover-sky:    linear-gradient(135deg, #1A2E4A, #4A90D9);
-  --cover-ember:  linear-gradient(135deg, #2E1A1A, #E05555);
+  --cover-ocean: linear-gradient(135deg, #1a3a5c, #2aabcc);
+  --cover-forest: linear-gradient(135deg, #1e3d2f, #3dbe8a);
+  --cover-galaxy: linear-gradient(135deg, #3d1f4e, #7c5cbf);
+  --cover-sunset: linear-gradient(135deg, #4a2c1a, #e8a838);
+  --cover-sky: linear-gradient(135deg, #1a2e4a, #4a90d9);
+  --cover-ember: linear-gradient(135deg, #2e1a1a, #e05555);
 }
 
 /* ============================================================
@@ -121,29 +120,28 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 
   /* App semantic tokens - Dark */
-  --bg-primary:       #0F1214;
-  --bg-secondary:     #161B1F;
-  --bg-navbar:        #0F1214;
-  --bg-card:          #1E2530;
-  --bg-card-hover:    #252D38;
-  --bg-input:         #1E2530;
-  --border-color:     #2A3441;
+  --bg-primary: #0f1214;
+  --bg-secondary: #161b1f;
+  --bg-navbar: #0f1214;
+  --bg-card: #1e2530;
+  --bg-card-hover: #252d38;
+  --bg-input: #1e2530;
+  --border-color: #2a3441;
 
-  --text-primary:     #CDD5E0;
-  --text-secondary:   #7A8FA6;
-  --text-muted:       #4A5E72;
+  --text-primary: #cdd5e0;
+  --text-secondary: #7a8fa6;
+  --text-muted: #4a5e72;
 
-  --accent-primary:   #4A90D9;
-  --accent-hover:     #5BA3F0;
-  --success:          #3DBE8A;
-  --warning:          #E8A838;
-  --danger:           #E05555;
+  --accent-primary: #4a90d9;
+  --accent-hover: #5ba3f0;
+  --success: #3dbe8a;
+  --warning: #e8a838;
+  --danger: #e05555;
 
-  --scrollbar-track:  #161B1F;
-  --scrollbar-thumb:  #2A3441;
-  --scrollbar-hover:  #4A5E72;
+  --scrollbar-track: #161b1f;
+  --scrollbar-thumb: #2a3441;
+  --scrollbar-hover: #4a5e72;
 }
-
 
 @theme inline {
   --color-background: var(--background);
@@ -183,7 +181,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
-
 
 @layer base {
   * {

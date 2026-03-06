@@ -62,7 +62,8 @@
               "buildTarget": "task-manager:build:production"
             },
             "development": {
-              "buildTarget": "task-manager:build:development"
+              "buildTarget": "task-manager:build:development",
+              "hmr": true
             }
           },
           "defaultConfiguration": "development"

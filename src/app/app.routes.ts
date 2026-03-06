@@ -36,7 +36,7 @@ export const routes: Routes = [
     path: '',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./layouts/private-layout/private-layout.component').then(
+      import('./layouts/private/private.layout').then(
         (m) => m.PrivateLayoutComponent,
       ),
     children: [
