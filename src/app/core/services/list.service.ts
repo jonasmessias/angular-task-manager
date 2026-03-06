@@ -2,13 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import type {
   CreateListDto,
   ListResponse,
   UpdateListDto,
 } from '../../features/lists/models/list.model';
+import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 
+/**
+ * Exposes HTTP methods only.
+ * List state within an open board is managed by BoardService.
+ */
 @Injectable({ providedIn: 'root' })
 export class ListService {
   private readonly http = inject(HttpClient);

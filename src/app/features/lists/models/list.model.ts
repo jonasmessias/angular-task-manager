@@ -1,3 +1,5 @@
+import type { CardResponse } from '../../cards/models/card.model';
+
 // ── Responses ────────────────────────────────────────────────────────────────
 
 export interface ListResponse {
@@ -5,6 +7,11 @@ export interface ListResponse {
   name: string;
   position: number;
   boardId: string;
+}
+
+/** List with embedded cards — used inside BoardDetail */
+export interface ListWithCards extends ListResponse {
+  cards: CardResponse[];
 }
 
 // ── DTOs ─────────────────────────────────────────────────────────────────────

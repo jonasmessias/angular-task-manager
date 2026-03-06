@@ -1,4 +1,4 @@
-import type { ListResponse } from '../../lists/models/list.model';
+import type { ListWithCards } from '../../lists/models/list.model';
 
 // ── Responses ────────────────────────────────────────────────────────────────
 
@@ -16,8 +16,9 @@ export interface BoardResponse {
   updatedAt: string;
 }
 
+/** Full board returned when opening a board — includes lists with their cards */
 export interface BoardDetail extends Omit<BoardResponse, 'listsCount'> {
-  lists: ListResponse[];
+  lists: ListWithCards[];
 }
 
 // ── DTOs ─────────────────────────────────────────────────────────────────────
