@@ -1,23 +1,36 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 
-import { AuthService } from '../../core/services/auth.service';
-import { PageHeaderComponent } from '../../shared/ui/page-header/page-header.component';
+import { WorkspaceService } from '@core/services/workspace.service';
+import { ZardDialogService } from '@shared/components/dialog/dialog.service';
+import { CreateWorkspaceDialogComponent } from '../workspaces/components/create-workspace-dialog/create-workspace-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [PageHeaderComponent],
-  template: `
-    <div class="p-6">
-      <app-page-header
-        [title]="'Bem-vindo de volta, ' + userName() + '! 👋'"
-        subtitle="Aqui está um resumo das suas atividades."
-      />
-    </div>
-  `,
+  imports: [],
+  template: ``,
 })
-export class DashboardComponent {
-  private readonly authService = inject(AuthService);
-  readonly userName = computed(() => this.authService.currentUser()?.name ?? 'Usuário');
+export class DashboardComponent implements OnInit {
+  private readonly workspaceService = inject(WorkspaceService);
+  private readonly dialogService = inject(ZardDialogService);
+
+  ngOnInit(): void {
+    this.workspaceService.loadAll().subscribe({
+      next: () => {
+        if (!this.workspaceService.hasWorkspaces()) {
+          this.dialogService.create({
+            zTitle: '🎉 Create your first workspace',
+            zDescription: 'Give your workspace a name. You can always change it later.',
+            zContent: CreateWorkspaceDialogComponent,
+            zData: { isFirstWorkspace: true },
+            zWidth: '440px',
+            zHideFooter: true,
+            zClosable: false,
+            zMaskClosable: false,
+          });
+        }
+      },
+    });
+  }
 }
