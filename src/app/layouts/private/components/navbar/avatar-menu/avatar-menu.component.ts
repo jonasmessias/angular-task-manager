@@ -14,6 +14,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { ThemeService } from '../../../../../core/services/theme.service';
+import { CreateWorkspaceDialogComponent } from '../../../../../features/workspaces/components/create-workspace-dialog/create-workspace-dialog.component';
+import { ZardDialogService } from '../../../../../shared/components/dialog/dialog.service';
 import { ZardIconComponent } from '../../../../../shared/components/icon/icon.component';
 
 @Component({
@@ -94,6 +96,19 @@ import { ZardIconComponent } from '../../../../../shared/components/icon/icon.co
           >
             <z-icon zType="settings" class="size-4 text-muted-foreground" />
             Settings
+          </button>
+        </div>
+
+        <!-- Logout -->
+        <div class="border-t border-border py-1">
+          <button
+            (click)="openCreateWorkspace()"
+            class="flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-sm cursor-pointer
+                   text-foreground hover:bg-accent transition-colors"
+            role="menuitem"
+          >
+            <z-icon zType="users" class="size-4 text-muted-foreground" />
+            Create workspace
           </button>
         </div>
 
@@ -232,6 +247,7 @@ export class AvatarMenuComponent implements OnDestroy {
   readonly themeService = inject(ThemeService);
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
+  private readonly dialogService = inject(ZardDialogService);
 
   // ── Template refs ────────────────────────────────────────────────────────
   private readonly triggerRef = viewChild.required<ElementRef>('triggerRef');
@@ -294,6 +310,18 @@ export class AvatarMenuComponent implements OnDestroy {
 
   setSystem(): void {
     this.themeService.setTheme('system');
+  }
+
+  openCreateWorkspace(): void {
+    this.closeAll();
+    this.dialogService.create({
+      zTitle: '🎉 Create workspace',
+      zDescription: 'Give your new workspace a name.',
+      zContent: CreateWorkspaceDialogComponent,
+      zData: { isFirstWorkspace: false, defaultName: 'My Workspace' },
+      zWidth: '440px',
+      zHideFooter: true,
+    });
   }
 
   logout(): void {

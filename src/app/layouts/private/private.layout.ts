@@ -13,7 +13,10 @@ import { AppSidebarComponent } from './components/sidebar/sidebar.component';
       <app-navbar />
       <div class="flex flex-1 min-h-0 overflow-hidden">
         <app-sidebar />
-        <main class="flex-1 overflow-auto bg-background">
+        <main
+          class="overflow-auto bg-background box-border flex-[1_1_calc(100vw-320px)]
+                 px-12 pb-12 pt-0"
+        >
           <router-outlet />
         </main>
       </div>
