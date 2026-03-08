@@ -2,6 +2,60 @@ import { Routes } from '@angular/router';
 import { authGuard, guestGuard, redirectGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  // Private routes (checked first — authGuard redirects to /login if unauthenticated)
+  {
+    path: '',
+    canActivate: [authGuard, redirectGuard],
+    loadComponent: () =>
+      import('./layouts/private/private.layout').then((m) => m.PrivateLayoutComponent),
+    children: [
+      // Dashboard
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      // All boards: /u/:username/boards
+      {
+        path: 'u/:username/boards',
+        loadComponent: () =>
+          import('./features/boards/boards-page/boards-page.component').then(
+            (m) => m.BoardsPageComponent,
+          ),
+      },
+      // Board detail: /b/:boardId/:boardSlug
+      {
+        path: 'b/:boardId/:boardSlug',
+        loadComponent: () =>
+          import('./features/boards/board-detail-page/board-detail-page.component').then(
+            (m) => m.BoardDetailPageComponent,
+          ),
+      },
+      // Workspace routes: /w/:workspaceSlug/home  &  /w/:workspaceSlug/account
+      {
+        path: 'w/:workspaceSlug',
+        children: [
+          {
+            path: 'home',
+            loadComponent: () =>
+              import('./features/workspaces/workspace-home-page/workspace-home-page.component').then(
+                (m) => m.WorkspaceHomePageComponent,
+              ),
+          },
+          {
+            path: 'account',
+            loadComponent: () =>
+              import('./features/workspaces/workspace-account-page/workspace-account-page.component').then(
+                (m) => m.WorkspaceAccountPageComponent,
+              ),
+          },
+          { path: '', redirectTo: 'home', pathMatch: 'full' },
+        ],
+      },
+    ],
+  },
+
   // Public routes
   {
     path: '',
@@ -44,22 +98,6 @@ export const routes: Routes = [
           import('./features/auth/verify-email-page/verify-email-page.component').then(
             (m) => m.VerifyEmailPageComponent,
           ),
-      },
-    ],
-  },
-
-  // Private routes
-  {
-    path: '',
-    canActivate: [authGuard, redirectGuard],
-    loadComponent: () =>
-      import('./layouts/private/private.layout').then((m) => m.PrivateLayoutComponent),
-    children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        loadComponent: () =>
-          import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
       },
     ],
   },
