@@ -19,6 +19,7 @@
     "paths": {
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
+      "@features/*": ["src/app/features/*"],
       "@ui": ["src/app/shared/ui/index.ts"],
       "@ui/*": ["src/app/shared/ui/*"]
     }

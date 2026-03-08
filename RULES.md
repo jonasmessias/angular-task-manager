@@ -1,73 +1,85 @@
-# System Prompt: Angular 19 Task Manager Development
+# Angular Task Manager — Development Rules
 
-You are an expert Angular developer. Follow these strict architectural and coding rules for the Task Manager project.
+You are an expert Angular developer. Strictly follow these rules for every change made to this project.
 
-## 1. Core Stack & Configuration
+## 1. Stack
 
-- **Angular 19+**: Standalone components only.
-- **Zoneless**: Ensure `provideZonelessChangeDetection()` is used. No `zone.js`.
-- **Change Detection**: Strict `OnPush` on **every** component.
-- **Reactivity**: Use Angular Signals (`signal`, `computed`, `input`, `output`).
-- **Styling**: Tailwind CSS v4 + `tailwindcss-animate`.
-- **Forms**: Reactive Forms only (`FormBuilder`). Check `form.invalid` and use `markAllAsTouched()` before submission.
+- **Angular 19+ standalone + zoneless** (`provideZonelessChangeDetection()`). No `zone.js`.
+- **Change detection**: `ChangeDetectionStrategy.OnPush` on every component, no exceptions.
+- **Reactivity**: Signals (`signal`, `computed`, `effect`, `input`, `output`). No `BehaviorSubject`, no `async` pipe.
+- **Styling**: Tailwind CSS v4. Semantic tokens only (`text-foreground`, `bg-background`, `text-primary`, `text-destructive`, etc.). No hardcoded colors (`text-gray-700`).
+- **Forms**: Reactive Forms via `FormBuilder`. Always call `markAllAsTouched()` and check `form.invalid` before submitting.
 
-## 2. Project Structure & Imports
+## 2. Structure & Imports
 
-- `core/`: Singletons (services, functional guards, functional interceptors, constants, interfaces).
-- `features/<domain>/`: Domain-specific components, models, and pages. **Never import from another feature**. Cross-feature communication must go through `core/services`.
-- `shared/`: Dumb UI components (`ui/`), primitive components (`components/`), utils, and shared services.
-- `layouts/`: `private/` and `public/` layouts.
-- **Path Aliases**: Always use `@core/*`, `@shared/*`, `@features/*`. **Never** use long relative paths (e.g., `../../../../`).
+```
+core/         → singletons: services, guards, interceptors, constants, interfaces, enums
+features/     → domain pages and components (boards, cards, lists, workspaces, auth, dashboard)
+shared/       → reusable: ui/ wrappers, components/ primitives, utils/, services/
+layouts/      → private/ and public/ layouts
+```
 
-## 3. Components & UI
+- **Path aliases**: always use `@core/*`, `@shared/*`, `@ui/*`, `@features/*`. Never use deep relative paths (`../../../../`).
+- **No cross-feature imports**: a feature must never import from another feature. Use `core/services` for cross-domain communication.
 
-- **Inputs/Outputs**: Use modern Signal APIs (`input()`, `input.required()`, `output()`). Never use `@Input()` or `@Output()` decorators.
-- **Conditionals & Classes**: Use `mergeClasses()` (from `@shared/utils/merge-classes`) with `[class]` bindings. Never use `[ngClass]`.
-- **Slots**: Use `<ng-content select="[slot='name']">` to allow content injection instead of passing styling through inputs.
-- **Templates**: Use inline templates if < 150 lines.
-- **Shared UI**: Always prefer existing wrappers in `shared/ui/` (e.g., `<app-button>`, `<app-input>`, `<app-form>`, `<app-page-card>`).
-- **Theme/Colors**: Strictly use Tailwind semantic tokens (`text-foreground`, `bg-background`, `text-primary`, `text-destructive`). Never use hardcoded colors (e.g., `text-gray-700`) unless explicitly in a theme preview component. Use the `dark:` modifier for specific dark-mode overrides.
+## 3. Components
 
-## 4. State Management & Services
+- **DI**: always `inject()`. Never constructor injection.
+- **Inputs/Outputs**: always `input()`, `input.required()`, `output()`. Never `@Input()` / `@Output()`.
+- **Classes**: use `mergeClasses()` from `@shared/utils/merge-classes` with `[class]` bindings. Never `[ngClass]`.
+- **Templates**: inline if under ~150 lines.
+- **Shared UI**: prefer existing wrappers from `shared/ui/` (`<app-button>`, `<app-input>`, `<app-textarea>`, `<app-select>`, `<app-form>`, `<app-page-header>`) over bare HTML.
+- Use `[formGroup]` on the `<form>` element directly — not on `<app-form>`.
+- `<app-form>` is a layout wrapper only (label + error slot); it does not accept `formGroup`.
 
-- **Dependency Injection**: Always use the `inject()` function. Never use constructor injection.
-- **Local State**: Use private signals (`private readonly _state = signal(...)`) and expose them as read-only via `computed()`. Never expose mutable signals globally.
-- **Async State**: Use the internal `AsyncState<T>` interface (`{ data, loading, error }`).
-- **State Clearing**: All stateful services must implement a `clearState()` method (to be called on logout).
+## 4. Services & State
 
-## 5. HTTP & API
+- Private signals for state: `private readonly _items = signal<AsyncState<T>>(initialAsyncState([]))`.
+- Expose read-only via `computed()`. Never expose mutable signals publicly.
+- Use `AsyncState<T>` interface (`{ data, loading, error }`) for all HTTP-backed state.
+- Every stateful service must have a `clearState()` method (called on logout).
 
-- **Non-JSON Responses**: For operations returning void, 204, or plain text (e.g., register, verify-email, logout, forgot/reset password), **always** pass `{ responseType: 'text' }`. Do not let Angular attempt to parse empty/text responses as JSON.
-- **Interceptors**: Use functional interceptors (`HttpInterceptorFn`).
-- **Error Handling**: Branch logic using `err.error?.code`. Use `err.error?.message` as a fallback.
+## 5. HTTP
+
+- For endpoints that return `void`, `204`, or plain text (logout, verify-email, forgot-password, reset-password): pass `{ responseType: 'text' }`.
+- Error handling: branch on `err.error?.code`, fall back to `err.error?.message`.
+- Auth interceptor attaches `Authorization: Bearer <token>` automatically.
 
 ## 6. Routing
 
-- **Dashboard**: The private dashboard route is `/`. **Never** use `/app`.
-- **Guards**: Use `authGuard` (redirects to `/login`), `guestGuard` (redirects to `/`), and `redirectGuard`.
-- **Lazy Loading**: Use `loadComponent` for all routes.
+- Private dashboard is at path `''` (root `/`). Never use `/app` or `/dashboard`.
+- Board detail page: `/boards/:id`.
+- All routes use `loadComponent` (lazy loading).
+- Guards: `authGuard` → redirect `/login`, `guestGuard` → redirect `/`, `redirectGuard` → handles post-login redirect.
 
-## 7. Toasts & Notifications
+## 7. Dialogs & Toasts
 
-- **Service**: Always use `ToastService`. Never import or call `toast()` directly from `ngx-sonner` inside components.
-- **Instance**: There is only **one** `<z-toaster>` located in `app.ts`. Do not add it anywhere else.
-- **Language**: All user-facing error messages and toasts must be in Portuguese (pt-BR).
+- **Dialogs**: `ZardDialogService.create({ zContent: MyComponent, zData: {...}, zHideFooter: true })`. The component injects `ZardDialogRef` (optional) and calls `this.dialogRef?.close(result)` to close.
+- **`ZardDialogRef` has NO `afterClose` observable**. Do not use it. React to state changes through service signals instead.
+- **Confirm dialogs**: `ZardAlertDialogService.confirm({ zOnOk: () => { ... } })`.
+- **Toasts**: always `ToastService.success()` / `ToastService.error()`. Never call `toast()` directly. One `<z-toaster>` in `app.ts` only.
+- All user-facing messages must be in **English**.
 
-## 8. Naming Conventions
+## 8. Naming
 
-- Pages: `<name>-page.component.ts`
-- Layouts: `<name>.layout.ts`
-- Domain Services: `<name>.service.ts`
-- Domain Models: `<name>.model.ts`
-- UI Wrappers: `app-<name>.component.ts` (Selector: `app-*`)
-- Primitives: `<name>.component.ts` (Selector: `z-*`)
+| Type           | File                       | Selector            |
+| -------------- | -------------------------- | ------------------- |
+| Page component | `<name>-page.component.ts` | `app-<name>-page`   |
+| Layout         | `<name>.layout.ts`         | `app-<name>-layout` |
+| Service        | `<name>.service.ts`        | —                   |
+| Model          | `<name>.model.ts`          | —                   |
+| UI wrapper     | `app-<name>.component.ts`  | `app-<name>`        |
+| Primitive      | `<name>.component.ts`      | `z-<name>`          |
 
-## 9. Strict Anti-Patterns (DO NOT USE)
+## 9. Anti-Patterns — Never Do
 
-❌ `BehaviorSubject` or RxJS for local state (use Signals).
-❌ `async` pipe in templates (use Signals).
-❌ `@Input` / `@Output` decorators.
-❌ Constructor injection.
-❌ `[ngClass]`.
-❌ Mutating state directly from outside the service.
-❌ Putting business/state logic inside Page Components (delegate to services).
+- ❌ `BehaviorSubject` or RxJS subjects for local/UI state
+- ❌ `async` pipe in templates
+- ❌ `@Input()` / `@Output()` decorators
+- ❌ Constructor injection
+- ❌ `[ngClass]`
+- ❌ Deep relative imports (`../../../../`)
+- ❌ Business logic inside page components — delegate to services
+- ❌ Mutating service state from outside the service
+- ❌ `ref.afterClose` — it does not exist on `ZardDialogRef`
+- ❌ Portuguese in any user-facing string, comment, or variable name
