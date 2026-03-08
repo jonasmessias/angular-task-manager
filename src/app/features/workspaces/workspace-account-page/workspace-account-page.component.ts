@@ -40,10 +40,10 @@ import type { WorkspaceResponse } from '../models/workspace.model';
           <!-- Rename section -->
           <section class="space-y-4">
             <h2 class="text-base font-semibold text-foreground">Rename workspace</h2>
-            <form [formGroup]="renameForm" (ngSubmit)="onRename()" class="flex items-end gap-3">
+            <form (submit)="onRename()" class="flex items-end gap-3">
               <div class="flex-1">
                 <app-input
-                  formControlName="name"
+                  [control]="renameForm.controls.name"
                   label="Workspace name"
                   placeholder="Enter workspace name"
                 />
