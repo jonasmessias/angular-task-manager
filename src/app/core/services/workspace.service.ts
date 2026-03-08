@@ -10,6 +10,7 @@ import type {
   WorkspaceResponse,
 } from '../../features/workspaces/models/workspace.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
+import { StorageKeys } from '../enums/storage-keys.enum';
 import { AsyncState, initialAsyncState } from '../interfaces/async-state.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -22,6 +23,9 @@ export class WorkspaceService {
   private readonly _activeWorkspace = signal<WorkspaceDetail | null>(null);
   private readonly _activeLoading = signal(false);
   private readonly _activeError = signal<string | null>(null);
+  private readonly _activeWorkspaceId = signal<string | null>(
+    localStorage.getItem(StorageKeys.ACTIVE_WORKSPACE_ID),
+  );
 
   // -- Selectors --------------------------------------------------------------
 
@@ -32,6 +36,12 @@ export class WorkspaceService {
   readonly activeWorkspace = this._activeWorkspace.asReadonly();
   readonly activeLoading = this._activeLoading.asReadonly();
   readonly activeError = this._activeError.asReadonly();
+  readonly activeWorkspaceId = this._activeWorkspaceId.asReadonly();
+
+  readonly hasWorkspaces = computed(() => this._workspaces().data.length > 0);
+  readonly workspacesLoaded = computed(
+    () => !this._workspaces().loading && this._workspaces().error === null,
+  );
 
   // -- Actions ----------------------------------------------------------------
 
@@ -40,15 +50,30 @@ export class WorkspaceService {
 
     return this.http.get<WorkspaceResponse[]>(API_ENDPOINTS.WORKSPACES.ALL).pipe(
       tap({
-        next: (data) => this._workspaces.set({ data, loading: false, error: null }),
+        next: (data) => {
+          this._workspaces.set({ data, loading: false, error: null });
+          // Auto-select first workspace if saved ID is gone
+          if (data.length > 0) {
+            const savedId = this._activeWorkspaceId();
+            const exists = data.some((w) => w.id === savedId);
+            if (!exists) {
+              this.setActiveWorkspaceId(data[0].id);
+            }
+          }
+        },
         error: (err) =>
           this._workspaces.update((s) => ({
             ...s,
             loading: false,
-            error: err?.error?.message ?? 'Erro ao carregar workspaces',
+            error: err?.error?.message ?? 'Failed to load workspaces',
           })),
       }),
     );
+  }
+
+  setActiveWorkspaceId(id: string): void {
+    this._activeWorkspaceId.set(id);
+    localStorage.setItem(StorageKeys.ACTIVE_WORKSPACE_ID, id);
   }
 
   loadById(id: string): Observable<WorkspaceDetail> {
@@ -62,7 +87,7 @@ export class WorkspaceService {
           this._activeLoading.set(false);
         },
         error: (err) => {
-          this._activeError.set(err?.error?.message ?? 'Erro ao carregar workspace');
+          this._activeError.set(err?.error?.message ?? 'Failed to load workspace');
           this._activeLoading.set(false);
         },
       }),
@@ -70,11 +95,15 @@ export class WorkspaceService {
   }
 
   create(dto: CreateWorkspaceDto): Observable<WorkspaceResponse> {
-    return this.http
-      .post<WorkspaceResponse>(API_ENDPOINTS.WORKSPACES.ALL, dto)
-      .pipe(
-        tap((created) => this._workspaces.update((s) => ({ ...s, data: [...s.data, created] }))),
-      );
+    return this.http.post<WorkspaceResponse>(API_ENDPOINTS.WORKSPACES.ALL, dto).pipe(
+      tap((created) => {
+        this._workspaces.update((s) => ({ ...s, data: [...s.data, created] }));
+        // Auto-activate newly created workspace if no active one
+        if (!this._activeWorkspaceId()) {
+          this.setActiveWorkspaceId(created.id);
+        }
+      }),
+    );
   }
 
   update(id: string, dto: UpdateWorkspaceDto): Observable<WorkspaceResponse> {
@@ -94,12 +123,19 @@ export class WorkspaceService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(API_ENDPOINTS.WORKSPACES.BY_ID(id)).pipe(
       tap(() => {
-        this._workspaces.update((s) => ({
-          ...s,
-          data: s.data.filter((w) => w.id !== id),
-        }));
+        const remaining = this._workspaces().data.filter((w) => w.id !== id);
+        this._workspaces.update((s) => ({ ...s, data: remaining }));
         if (this._activeWorkspace()?.id === id) {
           this._activeWorkspace.set(null);
+        }
+        if (this._activeWorkspaceId() === id) {
+          const next = remaining[0]?.id ?? null;
+          if (next) {
+            this.setActiveWorkspaceId(next);
+          } else {
+            this._activeWorkspaceId.set(null);
+            localStorage.removeItem(StorageKeys.ACTIVE_WORKSPACE_ID);
+          }
         }
       }),
     );
@@ -110,5 +146,7 @@ export class WorkspaceService {
     this._activeWorkspace.set(null);
     this._activeLoading.set(false);
     this._activeError.set(null);
+    this._activeWorkspaceId.set(null);
+    localStorage.removeItem(StorageKeys.ACTIVE_WORKSPACE_ID);
   }
 }

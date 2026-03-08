@@ -56,7 +56,7 @@ export class BoardService {
           this._boards.update((s) => ({
             ...s,
             loading: false,
-            error: err?.error?.message ?? 'Erro ao carregar boards',
+            error: err?.error?.message ?? 'Failed to load boards',
           })),
       }),
     );
@@ -74,7 +74,7 @@ export class BoardService {
           this._activeBoardLoading.set(false);
         },
         error: (err) => {
-          this._activeBoardError.set(err?.error?.message ?? 'Erro ao carregar board');
+          this._activeBoardError.set(err?.error?.message ?? 'Failed to load board');
           this._activeBoardLoading.set(false);
         },
       }),
