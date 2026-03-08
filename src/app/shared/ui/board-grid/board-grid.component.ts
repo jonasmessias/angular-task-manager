@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ZardIconComponent } from '@shared/components/icon/icon.component';
 import { boardPath } from '@shared/utils/slug';
 import type { BoardResponse } from '../../../features/boards/models/board.model';
 
@@ -9,7 +8,7 @@ import type { BoardResponse } from '../../../features/boards/models/board.model'
   selector: 'app-board-grid',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ZardIconComponent],
+  imports: [],
   template: `
     @if (loading()) {
       <div class="flex gap-3">

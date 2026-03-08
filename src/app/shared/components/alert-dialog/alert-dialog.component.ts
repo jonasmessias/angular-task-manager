@@ -1,6 +1,12 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
+import {
+  BasePortalOutlet,
+  CdkPortalOutlet,
+  ComponentPortal,
+  PortalModule,
+  TemplatePortal,
+} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,11 +27,11 @@ import {
 } from '@angular/core';
 import { ClassValue } from 'clsx';
 
-import { alertDialogVariants, ZardAlertDialogVariants } from './alert-dialog.variants';
-import { ZardButtonComponent } from '../button/button.component';
-import { ZardAlertDialogService } from './alert-dialog.service';
-import { ZardAlertDialogRef } from './alert-dialog-ref';
 import { generateId, mergeClasses } from '@shared/utils/merge-classes';
+import { ZardButtonComponent } from '../button/button.component';
+import { ZardAlertDialogRef } from './alert-dialog-ref';
+import { ZardAlertDialogService } from './alert-dialog.service';
+import { alertDialogVariants, ZardAlertDialogVariants } from './alert-dialog.variants';
 
 const noopFun = () => void 0;
 export type OnClickCallback<T> = (instance: T) => false | void | object;
@@ -93,8 +99,12 @@ export class ZardAlertDialogComponent<T> extends BasePortalOutlet {
   );
 
   private alertDialogId = generateId('alert-dialog');
-  protected readonly titleId = computed(() => (this.config.zTitle ? `${this.alertDialogId}-title` : null));
-  protected readonly descriptionId = computed(() => (this.config.zDescription ? `${this.alertDialogId}-description` : null));
+  protected readonly titleId = computed(() =>
+    this.config.zTitle ? `${this.alertDialogId}-title` : null,
+  );
+  protected readonly descriptionId = computed(() =>
+    this.config.zDescription ? `${this.alertDialogId}-description` : null,
+  );
 
   public alertDialogRef?: ZardAlertDialogRef<T>;
 

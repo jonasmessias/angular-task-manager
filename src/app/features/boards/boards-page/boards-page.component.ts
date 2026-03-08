@@ -1,14 +1,14 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { API_ENDPOINTS } from '@core/constants/api-endpoints.const';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { ZardIconComponent } from '@shared/components/icon/icon.component';
 import { BoardGridComponent } from '@shared/ui/board-grid/board-grid.component';
 import { PageContainerComponent } from '@shared/ui/page-container/page-container.component';
 import { workspaceAccountPath } from '@shared/utils/slug';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import type { WorkspaceResponse } from '../../workspaces/models/workspace.model';
 import type { BoardResponse } from '../models/board.model';
 
@@ -59,10 +59,7 @@ interface WorkspaceSection {
                 </button>
               </div>
 
-              <app-board-grid
-                [boards]="section.boards"
-                [loading]="section.loading"
-              />
+              <app-board-grid [boards]="section.boards" [loading]="section.loading" />
             </section>
 
             @if (!$last) {

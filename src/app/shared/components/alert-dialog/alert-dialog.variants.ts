@@ -6,7 +6,8 @@ export const alertDialogVariants = cva(
     variants: {
       zType: {
         default: '',
-        destructive: 'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
+        destructive:
+          'border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive',
         warning: 'border-warning/50 text-warning dark:border-warning [&>svg]:text-warning',
       },
     },
