@@ -1,3 +1,11 @@
+import { OverlayModule } from '@angular/cdk/overlay';
+import {
+  BasePortalOutlet,
+  CdkPortalOutlet,
+  ComponentPortal,
+  PortalModule,
+  TemplatePortal,
+} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,17 +23,14 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, PortalModule, TemplatePortal } from '@angular/cdk/portal';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { OverlayModule } from '@angular/cdk/overlay';
 
+import { ZardIcon } from '@shared/components/icon/icons';
+import { mergeClasses } from '@shared/utils/merge-classes';
 import { ZardButtonComponent } from '../button/button.component';
 import { ZardIconComponent } from '../icon/icon.component';
-import { mergeClasses } from '@shared/utils/merge-classes';
+import { ZardDialogRef } from './dialog-ref';
 import { ZardDialogService } from './dialog.service';
 import { dialogVariants } from './dialog.variants';
-import { ZardDialogRef } from './dialog-ref';
-import { ZardIcon } from '@shared/components/icon/icons';
 
 const noopFun = () => void 0;
 export type OnClickCallback<T> = (instance: T) => false | void | object;
@@ -55,25 +60,44 @@ export class ZardDialogOptions<T, U> {
   exportAs: 'zDialog',
   imports: [OverlayModule, PortalModule, ZardButtonComponent, ZardIconComponent],
   template: `
-    @if (config.zClosable || config.zClosable === undefined) {
-      <button data-testid="z-close-header-button" z-button zType="ghost" zSize="sm" class="absolute right-1 top-1" (click)="onCloseClick()">
-        <z-icon zType="x" />
-      </button>
-    }
+    <!-- Header bar: close | title | (delete slot) -->
+    <header class="flex h-14 shrink-0 items-center justify-between border-b px-2">
+      <!-- Left: close button -->
+      @if (config.zClosable || config.zClosable === undefined) {
+        <button
+          data-testid="z-close-header-button"
+          z-button
+          zType="ghost"
+          zSize="sm"
+          aria-label="Close"
+          (click)="onCloseClick()"
+        >
+          <z-icon zType="x" />
+        </button>
+      } @else {
+        <span class="w-9"></span>
+      }
 
-    @if (config.zTitle || config.zDescription) {
-      <header class="flex flex-col space-y-1.5 text-center sm:text-left">
+      <!-- Center: title -->
+      <div class="flex flex-col items-center gap-0.5 text-center">
         @if (config.zTitle) {
-          <h4 data-testid="z-title" class="text-lg font-semibold leading-none tracking-tight">{{ config.zTitle }}</h4>
-
-          @if (config.zDescription) {
-            <p data-testid="z-description" class="text-sm text-muted-foreground">{{ config.zDescription }}</p>
-          }
+          <h4 data-testid="z-title" class="text-base font-semibold leading-none tracking-tight">
+            {{ config.zTitle }}
+          </h4>
         }
-      </header>
-    }
+        @if (config.zDescription) {
+          <p data-testid="z-description" class="text-xs text-muted-foreground">
+            {{ config.zDescription }}
+          </p>
+        }
+      </div>
 
-    <main class="flex flex-col space-y-4">
+      <!-- Right: spacer to keep title centred -->
+      <span class="w-9"></span>
+    </header>
+
+    <!-- Scrollable content area -->
+    <main class="flex flex-col gap-4 overflow-y-auto p-6">
       <ng-template cdkPortalOutlet></ng-template>
 
       @if (isStringContent) {
@@ -82,23 +106,29 @@ export class ZardDialogOptions<T, U> {
     </main>
 
     @if (!config.zHideFooter) {
-      <footer class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2">
+      <footer
+        class="flex shrink-0 flex-col-reverse gap-2 border-t p-4 sm:flex-row sm:justify-end sm:gap-0 sm:space-x-2"
+      >
         @if (config.zCancelText !== null) {
           <button data-testid="z-cancel-button" z-button zType="outline" (click)="onCloseClick()">
             @if (config.zCancelIcon) {
               <z-icon [zType]="config.zCancelIcon" />
             }
-
             {{ config.zCancelText || 'Cancel' }}
           </button>
         }
 
         @if (config.zOkText !== null) {
-          <button data-testid="z-ok-button" z-button [zType]="config.zOkDestructive ? 'destructive' : 'default'" [disabled]="config.zOkDisabled" (click)="onOkClick()">
+          <button
+            data-testid="z-ok-button"
+            z-button
+            [zType]="config.zOkDestructive ? 'destructive' : 'default'"
+            [disabled]="config.zOkDisabled"
+            (click)="onOkClick()"
+          >
             @if (config.zOkIcon) {
               <z-icon [zType]="config.zOkIcon" />
             }
-
             {{ config.zOkText || 'OK' }}
           </button>
         }
@@ -108,23 +138,17 @@ export class ZardDialogOptions<T, U> {
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class]': 'classes()',
-    '[@dialogAnimation]': 'state()',
     '[style.width]': 'config.zWidth ? config.zWidth : null',
+    '[attr.data-state]': 'state()',
   },
-  animations: [
-    trigger('dialogAnimation', [
-      state('close', style({ opacity: 0, transform: 'scale(0.9)' })),
-      state('open', style({ opacity: 1, transform: 'scale(1)' })),
-      transition('close => open', animate('150ms ease-out')),
-      transition('open => close', animate('150ms ease-in')),
-    ]),
-  ],
 })
 export class ZardDialogComponent<T, U> extends BasePortalOutlet {
   private readonly host = inject(ElementRef<HTMLElement>);
   protected readonly config = inject(ZardDialogOptions<T, U>);
 
-  protected readonly classes = computed(() => mergeClasses(dialogVariants(), this.config.zCustomClasses));
+  protected readonly classes = computed(() =>
+    mergeClasses(dialogVariants(), this.config.zCustomClasses),
+  );
   public dialogRef?: ZardDialogRef<T>;
 
   protected readonly isStringContent = typeof this.config.zContent === 'string';
