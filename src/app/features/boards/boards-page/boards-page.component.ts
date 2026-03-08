@@ -3,12 +3,12 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@ang
 import { Router } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
 import { API_ENDPOINTS } from '@core/constants/api-endpoints.const';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { ZardIconComponent } from '@shared/components/icon/icon.component';
+import { BoardGridComponent } from '@shared/ui/board-grid/board-grid.component';
 import { PageContainerComponent } from '@shared/ui/page-container/page-container.component';
-import { boardPath, workspaceAccountPath } from '@shared/utils/slug';
+import { workspaceAccountPath } from '@shared/utils/slug';
 import type { WorkspaceResponse } from '../../workspaces/models/workspace.model';
 import type { BoardResponse } from '../models/board.model';
 
@@ -22,7 +22,7 @@ interface WorkspaceSection {
   selector: 'app-boards-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ZardIconComponent, PageContainerComponent],
+  imports: [ZardIconComponent, PageContainerComponent, BoardGridComponent],
   template: `
     <app-page-container>
       <div class="space-y-10">
@@ -59,38 +59,10 @@ interface WorkspaceSection {
                 </button>
               </div>
 
-              <!-- Board grid -->
-              @if (section.loading) {
-                <div class="flex gap-3">
-                  @for (_ of [1, 2, 3]; track $index) {
-                    <div class="w-44 h-24 rounded-lg bg-muted animate-pulse"></div>
-                  }
-                </div>
-              } @else if (section.boards.length === 0) {
-                <p class="text-sm text-muted-foreground">
-                  No boards yet. Use the
-                  <span class="font-medium text-foreground">Create</span> button in the navbar to
-                  add one.
-                </p>
-              } @else {
-                <div class="flex flex-wrap gap-3">
-                  @for (board of section.boards; track board.id) {
-                    <button
-                      (click)="openBoard(board)"
-                      class="w-44 h-24 rounded-lg bg-card border border-border hover:border-primary/50 hover:bg-accent transition-colors text-left px-3 py-2.5 flex flex-col justify-between group"
-                    >
-                      <span
-                        class="font-medium text-sm text-foreground line-clamp-2 group-hover:text-primary transition-colors"
-                      >
-                        {{ board.name }}
-                      </span>
-                      <span class="text-xs text-muted-foreground">
-                        {{ board.listsCount }} list{{ board.listsCount === 1 ? '' : 's' }}
-                      </span>
-                    </button>
-                  }
-                </div>
-              }
+              <app-board-grid
+                [boards]="section.boards"
+                [loading]="section.loading"
+              />
             </section>
 
             @if (!$last) {
@@ -142,10 +114,6 @@ export class BoardsPageComponent implements OnInit {
       },
       error: () => this.loading.set(false),
     });
-  }
-
-  openBoard(board: BoardResponse): void {
-    this.router.navigate(boardPath(board.id, board.name));
   }
 
   goToSettings(workspace: WorkspaceResponse): void {
