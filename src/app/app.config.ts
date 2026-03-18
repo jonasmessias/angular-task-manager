@@ -10,6 +10,7 @@ import { provideRouter, withViewTransitions } from '@angular/router';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { AuthService } from './core/services/auth.service';
 
 export const appConfig: ApplicationConfig = {
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes, withViewTransitions()),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
     {
       provide: APP_INITIALIZER,
       useFactory: () => {

@@ -5,6 +5,13 @@ export interface User {
   email: string;
 }
 
+// ── User DTOs ────────────────────────────────────────────────────────────────
+
+export interface UpdateProfileDto {
+  name?: string;
+  username?: string;
+}
+
 // ── Auth DTOs ────────────────────────────────────────────────────────────────
 
 export interface LoginDto {

@@ -15,6 +15,10 @@ import type {
   UpdateCardDto,
 } from '../../features/cards/models/card.model';
 import type { CreateListDto, UpdateListDto } from '../../features/lists/models/list.model';
+import type {
+  InviteMemberDto,
+  MemberResponse,
+} from '../../features/workspaces/models/member.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import { AsyncState, initialAsyncState } from '../interfaces/async-state.interface';
 
@@ -277,6 +281,20 @@ export class BoardService {
         }),
       ),
     );
+  }
+
+  // -- Board member actions ----------------------------------------------------
+
+  getBoardMembers(boardId: string): Observable<MemberResponse[]> {
+    return this.http.get<MemberResponse[]>(API_ENDPOINTS.BOARDS.MEMBERS(boardId));
+  }
+
+  inviteBoardMember(boardId: string, dto: InviteMemberDto): Observable<MemberResponse> {
+    return this.http.post<MemberResponse>(API_ENDPOINTS.BOARDS.MEMBERS(boardId), dto);
+  }
+
+  removeBoardMember(boardId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(API_ENDPOINTS.BOARDS.MEMBER(boardId, userId));
   }
 
   clearState(): void {

@@ -9,6 +9,7 @@ import type {
   RegisterDto,
   ResendVerificationDto,
   ResetPasswordDto,
+  UpdateProfileDto,
   User,
   VerifyEmailDto,
 } from '../../features/auth/models/auth.model';
@@ -122,6 +123,22 @@ export class AuthService {
     return this.http
       .get<User>(API_ENDPOINTS.USERS.ME)
       .pipe(tap((user) => this._currentUser.set(user)));
+  }
+
+  updateProfile(dto: UpdateProfileDto): Observable<User> {
+    return this.http
+      .put<User>(API_ENDPOINTS.USERS.ME, dto)
+      .pipe(tap((user) => this._currentUser.set(user)));
+  }
+
+  deleteAccount(): Observable<void> {
+    return this.http.delete<void>(API_ENDPOINTS.USERS.ME).pipe(
+      tap(() => this.clearSessionAndRedirect()),
+    );
+  }
+
+  getUserById(id: string): Observable<User> {
+    return this.http.get<User>(API_ENDPOINTS.USERS.BY_ID(id));
   }
 
   private saveSession(response: AuthResponse): void {

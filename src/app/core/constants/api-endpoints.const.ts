@@ -24,11 +24,15 @@ export const API_ENDPOINTS = {
   WORKSPACES: {
     ALL: `${BASE}/workspaces`,
     BY_ID: (id: string) => `${BASE}/workspaces/${id}`,
+    MEMBERS: (id: string) => `${BASE}/workspaces/${id}/members`,
+    MEMBER: (id: string, userId: string) => `${BASE}/workspaces/${id}/members/${userId}`,
   },
 
   BOARDS: {
     ALL: `${BASE}/boards`,
     BY_ID: (id: string) => `${BASE}/boards/${id}`,
+    MEMBERS: (id: string) => `${BASE}/boards/${id}/members`,
+    MEMBER: (id: string, userId: string) => `${BASE}/boards/${id}/members/${userId}`,
   },
 
   LISTS: {

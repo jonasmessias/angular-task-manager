@@ -11,4 +11,5 @@ export interface ApiError {
   statusCode: number;
   error?: string;
   timestamp?: string;
+  errors?: { field: string; message: string }[];
 }

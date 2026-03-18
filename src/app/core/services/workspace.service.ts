@@ -9,6 +9,10 @@ import type {
   WorkspaceDetail,
   WorkspaceResponse,
 } from '../../features/workspaces/models/workspace.model';
+import type {
+  InviteMemberDto,
+  MemberResponse,
+} from '../../features/workspaces/models/member.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import { StorageKeys } from '../enums/storage-keys.enum';
 import { AsyncState, initialAsyncState } from '../interfaces/async-state.interface';
@@ -139,6 +143,20 @@ export class WorkspaceService {
         }
       }),
     );
+  }
+
+  // -- Member actions ----------------------------------------------------------
+
+  getMembers(workspaceId: string): Observable<MemberResponse[]> {
+    return this.http.get<MemberResponse[]>(API_ENDPOINTS.WORKSPACES.MEMBERS(workspaceId));
+  }
+
+  inviteMember(workspaceId: string, dto: InviteMemberDto): Observable<MemberResponse> {
+    return this.http.post<MemberResponse>(API_ENDPOINTS.WORKSPACES.MEMBERS(workspaceId), dto);
+  }
+
+  removeMember(workspaceId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(API_ENDPOINTS.WORKSPACES.MEMBER(workspaceId, userId));
   }
 
   clearState(): void {
