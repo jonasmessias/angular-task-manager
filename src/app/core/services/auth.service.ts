@@ -132,9 +132,9 @@ export class AuthService {
   }
 
   deleteAccount(): Observable<void> {
-    return this.http.delete<void>(API_ENDPOINTS.USERS.ME).pipe(
-      tap(() => this.clearSessionAndRedirect()),
-    );
+    return this.http
+      .delete<void>(API_ENDPOINTS.USERS.ME)
+      .pipe(tap(() => this.clearSessionAndRedirect()));
   }
 
   getUserById(id: string): Observable<User> {

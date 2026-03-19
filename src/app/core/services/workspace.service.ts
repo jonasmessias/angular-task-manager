@@ -4,15 +4,15 @@ import type { Observable } from 'rxjs';
 import { tap } from 'rxjs';
 
 import type {
+  InviteMemberDto,
+  MemberResponse,
+} from '../../features/workspaces/models/member.model';
+import type {
   CreateWorkspaceDto,
   UpdateWorkspaceDto,
   WorkspaceDetail,
   WorkspaceResponse,
 } from '../../features/workspaces/models/workspace.model';
-import type {
-  InviteMemberDto,
-  MemberResponse,
-} from '../../features/workspaces/models/member.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import { StorageKeys } from '../enums/storage-keys.enum';
 import { AsyncState, initialAsyncState } from '../interfaces/async-state.interface';
