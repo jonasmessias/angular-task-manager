@@ -1,10 +1,6 @@
 # 📋 Task Manager — Frontend# TaskManager
 
-
-
 > Aplicação SPA de gerenciamento de tarefas com boards no estilo Kanban, construída com Angular 20.This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.6.
-
-
 
 ![Angular](https://img.shields.io/badge/Angular-20.3-DD0031?logo=angular&logoColor=white)## Development server
 
@@ -44,39 +40,35 @@ Angular CLI includes powerful code scaffolding tools. To generate a new componen
 
 - ⚡ **Zoneless** — Sem Zone.js, reatividade 100% via Angular SignalsFor a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
 
-
-
 ---```bash
 
 ng generate --help
 
 ## 🛠️ Stack Tecnológica```
 
-
-
-| Tecnologia               | Versão | Finalidade                              |## Building
+| Tecnologia | Versão | Finalidade |## Building
 
 | ------------------------ | ------ | --------------------------------------- |
 
-| Angular                  | 20.3   | Framework (zoneless change detection)   |To build the project run:
+| Angular | 20.3 | Framework (zoneless change detection) |To build the project run:
 
-| TypeScript               | 5.9    | Linguagem                               |
+| TypeScript | 5.9 | Linguagem |
 
-| Tailwind CSS             | 4.1    | Estilização utilitária                  |```bash
+| Tailwind CSS | 4.1 | Estilização utilitária |```bash
 
-| Angular CDK              | 20.2   | Overlay, Portal, A11y, Drag & Drop     |ng build
+| Angular CDK | 20.2 | Overlay, Portal, A11y, Drag & Drop |ng build
 
-| RxJS                     | 7.8    | HTTP reativo e gerenciamento de estado  |```
+| RxJS | 7.8 | HTTP reativo e gerenciamento de estado |```
 
-| Lucide Angular           | 0.553  | Biblioteca de ícones                    |
+| Lucide Angular | 0.553 | Biblioteca de ícones |
 
-| ngx-sonner               | 3.1    | Notificações toast                      |This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+| ngx-sonner | 3.1 | Notificações toast |This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
-| class-variance-authority | 0.7    | Sistema de variantes de componentes     |
+| class-variance-authority | 0.7 | Sistema de variantes de componentes |
 
-| tailwind-merge           | 3.3    | Merge de classes Tailwind sem conflitos |## Running unit tests
+| tailwind-merge | 3.3 | Merge de classes Tailwind sem conflitos |## Running unit tests
 
-| clsx                     | 2.1    | Utilitário de classes condicionais      |
+| clsx | 2.1 | Utilitário de classes condicionais |
 
 To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
 
@@ -88,7 +80,7 @@ To execute unit tests with the [Karma](https://karma-runner.github.io) test runn
 
 ```
 
-```
+````
 
 src/app/## Running end-to-end tests
 
@@ -128,7 +120,7 @@ src/app/## Running end-to-end tests
     ├── services/           # ToastService
     ├── ui/                 # Componentes de UI da aplicação
     └── utils/              # Funções utilitárias (slug, merge-classes)
-```
+````
 
 ---
 
@@ -192,13 +184,13 @@ Executa testes unitários com Karma + Jasmine.
 
 ### Rotas Públicas (apenas visitantes)
 
-| Rota               | Componente                     | Descrição                |
-| ------------------ | ------------------------------ | ------------------------ |
-| `/login`           | `LoginPageComponent`           | Formulário de login      |
-| `/register`        | `RegisterPageComponent`        | Formulário de registro   |
-| `/forgot-password` | `ForgotPasswordPageComponent`  | Solicitar reset de senha |
-| `/reset-password`  | `ResetPasswordPageComponent`   | Definir nova senha       |
-| `/verify-email`    | `VerifyEmailPageComponent`     | Verificação de email     |
+| Rota               | Componente                    | Descrição                |
+| ------------------ | ----------------------------- | ------------------------ |
+| `/login`           | `LoginPageComponent`          | Formulário de login      |
+| `/register`        | `RegisterPageComponent`       | Formulário de registro   |
+| `/forgot-password` | `ForgotPasswordPageComponent` | Solicitar reset de senha |
+| `/reset-password`  | `ResetPasswordPageComponent`  | Definir nova senha       |
+| `/verify-email`    | `VerifyEmailPageComponent`    | Verificação de email     |
 
 ---
 
