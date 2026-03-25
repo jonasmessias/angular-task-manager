@@ -9,6 +9,7 @@ export interface BoardResponse {
   name: string;
   type: BoardType;
   description: string;
+  coverUrl: string | null;
   ownerId: string;
   ownerName: string;
   listsCount: number;

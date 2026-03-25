@@ -145,6 +145,38 @@ export class WorkspaceService {
     );
   }
 
+  // -- Cover actions -----------------------------------------------------------
+
+  uploadCover(id: string, file: File): Observable<WorkspaceResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<WorkspaceResponse>(API_ENDPOINTS.WORKSPACES.COVER(id), formData).pipe(
+      tap((updated) => {
+        this._workspaces.update((s) => ({
+          ...s,
+          data: s.data.map((w) => (w.id === id ? updated : w)),
+        }));
+        if (this._activeWorkspace()?.id === id) {
+          this._activeWorkspace.update((w) => (w ? { ...w, ...updated } : w));
+        }
+      }),
+    );
+  }
+
+  deleteCover(id: string): Observable<void> {
+    return this.http.delete<void>(API_ENDPOINTS.WORKSPACES.COVER(id)).pipe(
+      tap(() => {
+        this._workspaces.update((s) => ({
+          ...s,
+          data: s.data.map((w) => (w.id === id ? { ...w, coverUrl: null } : w)),
+        }));
+        if (this._activeWorkspace()?.id === id) {
+          this._activeWorkspace.update((w) => (w ? { ...w, coverUrl: null } : w));
+        }
+      }),
+    );
+  }
+
   // -- Member actions ----------------------------------------------------------
 
   getMembers(workspaceId: string): Observable<MemberResponse[]> {

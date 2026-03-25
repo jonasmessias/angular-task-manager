@@ -1,31 +1,33 @@
-import type { BoardResponse } from '../../boards/models/board.model';
-
 // ── Responses ────────────────────────────────────────────────────────────────
 
-export interface WorkspaceResponse {
+export interface AttachmentResponse {
   id: string;
-  name: string;
-  coverUrl: string | null;
-  boardCount: number;
+  fileName: string;
+  fileKey: string;
+  fileUrl: string;
+  fileSize: number;
+  contentType: string;
+  cardId: string;
+  uploadedById: string;
   createdAt: string;
-  updatedAt: string;
 }
 
-export interface WorkspaceDetail {
-  id: string;
-  name: string;
-  coverUrl: string | null;
-  boards: BoardResponse[];
-  createdAt: string;
-  updatedAt: string;
+export interface RequestUploadResponse {
+  uploadUrl: string;
+  fileKey: string;
 }
 
 // ── DTOs ─────────────────────────────────────────────────────────────────────
 
-export interface CreateWorkspaceDto {
-  name: string;
+export interface RequestUploadDto {
+  fileName: string;
+  contentType: string;
+  fileSize: number;
 }
 
-export interface UpdateWorkspaceDto {
-  name?: string;
+export interface ConfirmAttachmentDto {
+  fileName: string;
+  fileKey: string;
+  contentType: string;
+  fileSize: number;
 }

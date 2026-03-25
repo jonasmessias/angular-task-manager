@@ -3,6 +3,7 @@ export interface User {
   name: string;
   username: string;
   email: string;
+  avatarUrl: string | null;
 }
 
 // ── User DTOs ────────────────────────────────────────────────────────────────
@@ -51,6 +52,10 @@ export interface RefreshTokenDto {
 
 export interface LogoutDto {
   refreshToken: string;
+}
+
+export interface GoogleLoginDto {
+  token: string;
 }
 
 // ── Auth Responses ───────────────────────────────────────────────────────────

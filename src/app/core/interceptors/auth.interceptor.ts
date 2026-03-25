@@ -9,6 +9,7 @@ const AUTH_ROUTES = [
   '/auth/login',
   '/auth/register',
   '/auth/refresh',
+  '/auth/google',
   '/auth/forgot-password',
   '/auth/reset-password',
   '/auth/verify-email',

@@ -5,6 +5,7 @@ import { catchError, Observable, of, switchMap, tap } from 'rxjs';
 import type {
   AuthResponse,
   ForgotPasswordDto,
+  GoogleLoginDto,
   LoginDto,
   RegisterDto,
   ResendVerificationDto,
@@ -64,6 +65,13 @@ export class AuthService {
     );
   }
 
+  googleLogin(dto: GoogleLoginDto): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(API_ENDPOINTS.AUTH.GOOGLE, dto).pipe(
+      tap((response) => this.saveSession(response)),
+      switchMap((response) => this.getProfile().pipe(switchMap(() => of(response)))),
+    );
+  }
+
   register(dto: RegisterDto): Observable<void> {
     return this.http
       .post(API_ENDPOINTS.AUTH.REGISTER, dto, { responseType: 'text' })
@@ -74,6 +82,14 @@ export class AuthService {
     const refreshToken = localStorage.getItem(StorageKeys.REFRESH_TOKEN);
     if (refreshToken) {
       this.http.post(API_ENDPOINTS.AUTH.LOGOUT, { refreshToken }).subscribe();
+    }
+    this.clearSessionAndRedirect();
+  }
+
+  logoutAll(): void {
+    const refreshToken = localStorage.getItem(StorageKeys.REFRESH_TOKEN);
+    if (refreshToken) {
+      this.http.post(API_ENDPOINTS.AUTH.LOGOUT_ALL, { refreshToken }).subscribe();
     }
     this.clearSessionAndRedirect();
   }
@@ -129,6 +145,25 @@ export class AuthService {
     return this.http
       .put<User>(API_ENDPOINTS.USERS.ME, dto)
       .pipe(tap((user) => this._currentUser.set(user)));
+  }
+
+  uploadAvatar(file: File): Observable<User> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http
+      .put<User>(API_ENDPOINTS.USERS.AVATAR, formData)
+      .pipe(tap((user) => this._currentUser.set(user)));
+  }
+
+  deleteAvatar(): Observable<void> {
+    return this.http.delete<void>(API_ENDPOINTS.USERS.AVATAR).pipe(
+      tap(() => {
+        const current = this._currentUser();
+        if (current) {
+          this._currentUser.set({ ...current, avatarUrl: null });
+        }
+      }),
+    );
   }
 
   deleteAccount(): Observable<void> {

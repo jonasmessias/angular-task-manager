@@ -125,6 +125,38 @@ export class BoardService {
     );
   }
 
+  // -- Cover actions -----------------------------------------------------------
+
+  uploadCover(id: string, file: File): Observable<BoardResponse> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.put<BoardResponse>(API_ENDPOINTS.BOARDS.COVER(id), formData).pipe(
+      tap((updated) => {
+        this._boards.update((s) => ({
+          ...s,
+          data: s.data.map((b) => (b.id === id ? updated : b)),
+        }));
+        if (this._activeBoard()?.id === id) {
+          this._activeBoard.update((b) => (b ? { ...b, ...updated } : b));
+        }
+      }),
+    );
+  }
+
+  deleteCover(id: string): Observable<void> {
+    return this.http.delete<void>(API_ENDPOINTS.BOARDS.COVER(id)).pipe(
+      tap(() => {
+        this._boards.update((s) => ({
+          ...s,
+          data: s.data.map((b) => (b.id === id ? { ...b, coverUrl: null } : b)),
+        }));
+        if (this._activeBoard()?.id === id) {
+          this._activeBoard.update((b) => (b ? { ...b, coverUrl: null } : b));
+        }
+      }),
+    );
+  }
+
   // -- List actions -----------------------------------------------------------
 
   addList(
