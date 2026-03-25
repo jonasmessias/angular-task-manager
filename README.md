@@ -27,10 +27,10 @@ npm install
 
 As variáveis de ambiente estão em `src/environments/`:
 
-| Arquivo              | `apiUrl`                            | Descrição         |
-| -------------------- | ----------------------------------- | ----------------- |
-| `environment.ts`     | `http://localhost:8080`             | Desenvolvimento   |
-| `environment.prod.ts`| `https://api.jonasmessias.dev.br`   | Produção          |
+| Arquivo               | `apiUrl`                          | Descrição       |
+| --------------------- | --------------------------------- | --------------- |
+| `environment.ts`      | `http://localhost:8080`           | Desenvolvimento |
+| `environment.prod.ts` | `https://api.jonasmessias.dev.br` | Produção        |
 
 ### 4. Executar a aplicação
 
@@ -84,14 +84,14 @@ src/app/
 
 ## Stack Tecnológica
 
-| Tecnologia                 | Finalidade                              |
-| -------------------------- | --------------------------------------- |
-| Angular 20                 | Framework (zoneless change detection)   |
-| TypeScript 5.9             | Linguagem                               |
-| Tailwind CSS 4.1           | Estilização utilitária                  |
-| Angular CDK                | Overlay, Portal, A11y, Drag & Drop      |
-| RxJS 7.8                   | HTTP reativo e gerenciamento de estado  |
-| Lucide Angular             | Biblioteca de ícones                    |
-| ngx-sonner                 | Notificações toast                      |
-| class-variance-authority   | Sistema de variantes de componentes     |
-| tailwind-merge             | Merge de classes Tailwind               |
+| Tecnologia               | Finalidade                             |
+| ------------------------ | -------------------------------------- |
+| Angular 20               | Framework (zoneless change detection)  |
+| TypeScript 5.9           | Linguagem                              |
+| Tailwind CSS 4.1         | Estilização utilitária                 |
+| Angular CDK              | Overlay, Portal, A11y, Drag & Drop     |
+| RxJS 7.8                 | HTTP reativo e gerenciamento de estado |
+| Lucide Angular           | Biblioteca de ícones                   |
+| ngx-sonner               | Notificações toast                     |
+| class-variance-authority | Sistema de variantes de componentes    |
+| tailwind-merge           | Merge de classes Tailwind              |
