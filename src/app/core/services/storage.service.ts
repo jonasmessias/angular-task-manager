@@ -2,13 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import type { Observable } from 'rxjs';
 
+import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 import type {
   DeleteFileDto,
   PresignedUploadDto,
   PresignedUploadResponse,
   UploadResponse,
 } from '../interfaces/storage.interface';
-import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 
 @Injectable({ providedIn: 'root' })
 export class StorageService {

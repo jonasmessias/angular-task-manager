@@ -4,16 +4,16 @@ import type { Observable } from 'rxjs';
 import { tap } from 'rxjs';
 
 import type {
-  CardResponse,
-  CreateCardDto,
-  UpdateCardDto,
-} from '../../features/cards/models/card.model';
-import type {
   AttachmentResponse,
   ConfirmAttachmentDto,
   RequestUploadDto,
   RequestUploadResponse,
 } from '../../features/cards/models/attachment.model';
+import type {
+  CardResponse,
+  CreateCardDto,
+  UpdateCardDto,
+} from '../../features/cards/models/card.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints.const';
 
 /**
