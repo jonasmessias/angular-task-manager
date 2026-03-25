@@ -55,7 +55,7 @@ export interface LogoutDto {
 }
 
 export interface GoogleLoginDto {
-  token: string;
+  idToken: string;
 }
 
 // ── Auth Responses ───────────────────────────────────────────────────────────

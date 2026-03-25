@@ -138,7 +138,7 @@ export class RegisterPageComponent {
   onGoogleLogin(token: string): void {
     this.isLoading.set(true);
 
-    this.authService.googleLogin({ token }).subscribe({
+    this.authService.googleLogin({ idToken: token }).subscribe({
       next: () => {
         this.isLoading.set(false);
         this.toast.success('Login realizado com sucesso!');
