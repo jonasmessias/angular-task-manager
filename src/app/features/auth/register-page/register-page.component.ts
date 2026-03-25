@@ -10,6 +10,7 @@ import { AppButtonComponent } from '@shared/ui/button/app-button.component';
 import { PageCardComponent } from '@shared/ui/card/page-card.component';
 import { AppFormComponent } from '@shared/ui/form/app-form.component';
 import { AppInputComponent } from '@shared/ui/input/app-input.component';
+import { GoogleButtonComponent } from '../components/google-button/google-button.component';
 import { RegisterDto } from '../models/auth.model';
 
 @Component({
@@ -23,6 +24,7 @@ import { RegisterDto } from '../models/auth.model';
     AppButtonComponent,
     AppFormComponent,
     AppInputComponent,
+    GoogleButtonComponent,
   ],
   template: `
     <app-page-card title="Criar Conta">
@@ -65,6 +67,8 @@ import { RegisterDto } from '../models/auth.model';
           Criar Conta
         </app-button>
       </app-form>
+
+      <app-google-button [isLoading]="isLoading()" (googleToken)="onGoogleLogin($event)" />
 
       <p class="text-center text-sm text-muted-foreground mt-4">
         Já tem uma conta?
@@ -127,6 +131,22 @@ export class RegisterPageComponent {
           err.error?.message ??
           'Falha ao criar conta. Tente novamente.';
         this.toast.error(message);
+      },
+    });
+  }
+
+  onGoogleLogin(token: string): void {
+    this.isLoading.set(true);
+
+    this.authService.googleLogin({ token }).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.toast.success('Login realizado com sucesso!');
+        this.router.navigate(['/']);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading.set(false);
+        this.toast.error(err.error?.message ?? 'Falha ao entrar com Google');
       },
     });
   }

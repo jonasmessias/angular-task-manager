@@ -8,6 +8,8 @@
 
     <app-login-form [isLoading]="isLoading()" (loginSubmit)="onLogin($event)" />
 
+    <app-google-button [isLoading]="isLoading()" (googleToken)="onGoogleLogin($event)" />
+
     <div class="mt-4 text-sm text-center text-muted-foreground">
       Não tem uma conta?
       <a routerLink="/register" class="text-primary hover:underline font-medium">Criar conta</a>

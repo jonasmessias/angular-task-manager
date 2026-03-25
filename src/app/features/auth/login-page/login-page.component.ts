@@ -7,6 +7,7 @@ import { REGEX_PATTERNS } from '@core/constants/regex-patterns.const';
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@shared/services/toast.service';
 import { PageCardComponent } from '@shared/ui/card/page-card.component';
+import { GoogleButtonComponent } from '../components/google-button/google-button.component';
 import { LoginFormComponent } from '../components/login-form/login-form.component';
 import { LoginDto } from '../models/auth.model';
 
@@ -14,10 +15,12 @@ import { LoginDto } from '../models/auth.model';
   selector: 'app-login-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterModule, LoginFormComponent, PageCardComponent],
+  imports: [RouterModule, LoginFormComponent, PageCardComponent, GoogleButtonComponent],
   template: `
     <app-page-card title="Login">
       <app-login-form [isLoading]="isLoading()" (loginSubmit)="onLogin($event)" />
+
+      <app-google-button [isLoading]="isLoading()" (googleToken)="onGoogleLogin($event)" />
 
       <div class="mt-4 text-sm text-center text-muted-foreground">
         Não tem uma conta?
@@ -55,6 +58,22 @@ export class LoginPageComponent {
         }
 
         this.toast.error(err.error?.message ?? 'Email/username ou senha inválidos');
+      },
+    });
+  }
+
+  onGoogleLogin(token: string): void {
+    this.isLoading.set(true);
+
+    this.authService.googleLogin({ token }).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.toast.success('Login realizado com sucesso!');
+        this.router.navigate(['/']);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading.set(false);
+        this.toast.error(err.error?.message ?? 'Falha ao entrar com Google');
       },
     });
   }
