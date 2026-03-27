@@ -1,7 +1,6 @@
 // ── Responses ────────────────────────────────────────────────────────────────
 
 export interface MemberResponse {
-  id: string;
   userId: string;
   name: string;
   username: string;

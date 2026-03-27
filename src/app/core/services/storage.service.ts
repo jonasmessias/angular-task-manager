@@ -25,7 +25,7 @@ export class StorageService {
   }
 
   deleteFile(dto: DeleteFileDto): Observable<void> {
-    const params = new HttpParams().set('fileKey', dto.fileKey);
+    const params = new HttpParams().set('fileUrl', dto.fileUrl);
     return this.http.delete<void>(API_ENDPOINTS.STORAGE.DELETE, { params });
   }
 }
