@@ -3,15 +3,22 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { AuthService } from '@core/services/auth.service';
 import { WorkspaceService } from '@core/services/workspace.service';
+import { ZardBadgeComponent } from '@shared/components/badge/badge.component';
 import { ZardIconComponent } from '@shared/components/icon/icon.component';
-import { boardPath, boardsPath, workspaceAccountPath, workspaceHomePath } from '@shared/utils/slug';
+import {
+  boardPath,
+  boardsPath,
+  workspaceAccountPath,
+  workspaceHomePath,
+  workspaceMembersPath,
+} from '@shared/utils/slug';
 import type { WorkspaceResponse } from '../../../../features/workspaces/models/workspace.model';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, ZardIconComponent],
+  imports: [RouterLink, RouterLinkActive, ZardIconComponent, ZardBadgeComponent],
   template: `
     <aside
       class="flex flex-col w-64 h-full bg-sidebar shrink-0 border-r border-border overflow-y-auto"
@@ -79,6 +86,10 @@ import type { WorkspaceResponse } from '../../../../features/workspaces/models/w
                     {{ workspace.name }}
                   </span>
 
+                  @if (isShared(workspace)) {
+                    <z-badge zType="secondary" class="text-[9px] px-1.5 py-0">Shared</z-badge>
+                  }
+
                   <!-- Collapse chevron -->
                   <z-icon
                     zType="chevron-down"
@@ -100,6 +111,17 @@ import type { WorkspaceResponse } from '../../../../features/workspaces/models/w
                     >
                       <z-icon zType="layout-dashboard" class="size-3.5 shrink-0" />
                       Boards
+                    </a>
+                    <a
+                      [routerLink]="workspaceMembers(workspace)"
+                      routerLinkActive="bg-accent text-accent-foreground font-medium"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      class="flex items-center gap-2 px-2 py-1.5 rounded-md text-sm
+                             text-muted-foreground hover:bg-accent hover:text-accent-foreground
+                             transition-colors"
+                    >
+                      <z-icon zType="users" class="size-3.5 shrink-0" />
+                      Members
                     </a>
                     <a
                       [routerLink]="workspaceSettings(workspace)"
@@ -158,8 +180,17 @@ export class AppSidebarComponent {
     return workspaceHomePath(workspace.id, workspace.name);
   }
 
+  workspaceMembers(workspace: WorkspaceResponse): string[] {
+    return workspaceMembersPath(workspace.id, workspace.name);
+  }
+
   workspaceSettings(workspace: WorkspaceResponse): string[] {
     return workspaceAccountPath(workspace.id, workspace.name);
+  }
+
+  isShared(workspace: WorkspaceResponse): boolean {
+    const userId = this.authService.currentUser()?.id;
+    return !!userId && !!workspace.ownerId && workspace.ownerId !== userId;
   }
 
   boardLink(boardId: string, boardName: string): string[] {

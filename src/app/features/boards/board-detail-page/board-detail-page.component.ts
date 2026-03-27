@@ -10,6 +10,7 @@ import { ToastService } from '@shared/services/toast.service';
 import { AppButtonComponent } from '@shared/ui/button/app-button.component';
 import { PageHeaderComponent } from '@shared/ui/page-header/page-header.component';
 import { BoardKanbanComponent } from '../components/board-kanban/board-kanban.component';
+import { BoardMembersDialogComponent } from '../components/board-members-dialog/board-members-dialog.component';
 import { EditBoardDialogComponent } from '../components/edit-board-dialog/edit-board-dialog.component';
 @Component({
   selector: 'app-board-detail-page',
@@ -36,6 +37,9 @@ import { EditBoardDialogComponent } from '../components/edit-board-dialog/edit-b
       } @else if (boardService.activeBoard(); as board) {
         <div class="px-6 pt-6 pb-0 shrink-0">
           <app-page-header [title]="board.name" [subtitle]="board.description">
+            <app-button variant="ghost" icon="users" (click)="openBoardMembers()"
+              >Members</app-button
+            >
             <app-button variant="ghost" icon="pencil" (click)="openEditBoard()">Edit</app-button>
             <app-button variant="destructive" icon="trash-2" (click)="deleteBoard()"
               >Delete</app-button
@@ -75,6 +79,19 @@ export class BoardDetailPageComponent implements OnInit, OnDestroy {
       zContent: EditBoardDialogComponent,
       zData: { board },
       zWidth: '440px',
+      zHideFooter: true,
+    });
+  }
+
+  openBoardMembers(): void {
+    const board = this.boardService.activeBoard();
+    if (!board) return;
+
+    this.dialogService.create({
+      zTitle: 'Board Members',
+      zContent: BoardMembersDialogComponent,
+      zData: { boardId: board.id },
+      zWidth: '480px',
       zHideFooter: true,
     });
   }

@@ -48,3 +48,10 @@ export function workspaceHomePath(workspaceId: string, workspaceName: string): s
 export function workspaceAccountPath(workspaceId: string, workspaceName: string): string[] {
   return ['/w', workspaceSegment(workspaceId, workspaceName), 'account'];
 }
+
+/**
+ * Builds the workspace members URL: /w/<slug-id>/members
+ */
+export function workspaceMembersPath(workspaceId: string, workspaceName: string): string[] {
+  return ['/w', workspaceSegment(workspaceId, workspaceName), 'members'];
+}

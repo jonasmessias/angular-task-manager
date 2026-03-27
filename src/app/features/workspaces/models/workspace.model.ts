@@ -6,7 +6,9 @@ export interface WorkspaceResponse {
   id: string;
   name: string;
   coverUrl: string | null;
+  ownerId: string;
   boardCount: number;
+  memberCount: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -15,7 +17,9 @@ export interface WorkspaceDetail {
   id: string;
   name: string;
   coverUrl: string | null;
+  ownerId: string;
   boards: BoardResponse[];
+  memberCount: number;
   createdAt: string;
   updatedAt: string;
 }

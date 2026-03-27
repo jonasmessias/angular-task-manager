@@ -24,14 +24,6 @@ export const routes: Routes = [
             (m) => m.BoardsPageComponent,
           ),
       },
-      // Board detail: /b/:boardId/:boardSlug
-      {
-        path: 'b/:boardId/:boardSlug',
-        loadComponent: () =>
-          import('./features/boards/board-detail-page/board-detail-page.component').then(
-            (m) => m.BoardDetailPageComponent,
-          ),
-      },
       // Workspace routes: /w/:workspaceSlug/home  &  /w/:workspaceSlug/account
       {
         path: 'w/:workspaceSlug',
@@ -50,8 +42,31 @@ export const routes: Routes = [
                 (m) => m.WorkspaceAccountPageComponent,
               ),
           },
+          {
+            path: 'members',
+            loadComponent: () =>
+              import('./features/workspaces/workspace-members-page/workspace-members-page.component').then(
+                (m) => m.WorkspaceMembersPageComponent,
+              ),
+          },
           { path: '', redirectTo: 'home', pathMatch: 'full' },
         ],
+      },
+    ],
+  },
+
+  // Board detail (navbar only, no sidebar)
+  {
+    path: 'b/:boardId/:boardSlug',
+    canActivate: [authGuard],
+    loadComponent: () => import('./layouts/board/board.layout').then((m) => m.BoardLayoutComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/boards/board-detail-page/board-detail-page.component').then(
+            (m) => m.BoardDetailPageComponent,
+          ),
       },
     ],
   },
