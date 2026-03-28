@@ -13,7 +13,7 @@ import type { BoardResponse } from '../../../features/boards/models/board.model'
     @if (loading()) {
       <div class="flex gap-3">
         @for (_ of [1, 2, 3]; track $index) {
-          <div class="w-44 h-24 rounded-lg bg-muted animate-pulse"></div>
+          <div class="w-48 h-28 rounded-lg bg-muted animate-pulse"></div>
         }
       </div>
     } @else if (boards().length === 0) {
@@ -26,19 +26,31 @@ import type { BoardResponse } from '../../../features/boards/models/board.model'
         @for (board of boards(); track board.id) {
           <button
             (click)="openBoard(board)"
-            class="w-44 h-24 rounded-lg bg-card border border-border hover:border-primary/50
-                   hover:bg-accent transition-colors text-left px-3 py-2.5 flex flex-col
-                   justify-between group"
+            class="w-48 rounded-lg bg-card border border-border hover:border-primary/50
+                   hover:shadow-md transition-all text-left flex flex-col
+                   overflow-hidden group"
           >
-            <span
-              class="font-medium text-sm text-foreground line-clamp-2
-                     group-hover:text-primary transition-colors"
+            @if (board.coverUrl) {
+              <div
+                class="w-full h-20 bg-cover bg-center"
+                [style.background-image]="'url(' + board.coverUrl + ')'"
+              ></div>
+            }
+            <div
+              class="px-3 py-2.5 flex flex-col justify-between flex-1"
+              [class.pt-3]="!board.coverUrl"
+              [class.min-h-20]="!board.coverUrl"
             >
-              {{ board.name }}
-            </span>
-            <span class="text-xs text-muted-foreground">
-              {{ board.listsCount }} list{{ board.listsCount === 1 ? '' : 's' }}
-            </span>
+              <span
+                class="font-medium text-sm text-foreground line-clamp-2
+                       group-hover:text-primary transition-colors"
+              >
+                {{ board.name }}
+              </span>
+              <span class="text-xs text-muted-foreground mt-1">
+                {{ board.listsCount }} list{{ board.listsCount === 1 ? '' : 's' }}
+              </span>
+            </div>
           </button>
         }
       </div>

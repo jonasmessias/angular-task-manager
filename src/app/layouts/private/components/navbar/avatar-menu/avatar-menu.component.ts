@@ -13,6 +13,7 @@ import {
   viewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { ThemeService } from '../../../../../core/services/theme.service';
 import { CreateWorkspaceDialogComponent } from '../../../../../features/workspaces/components/create-workspace-dialog/create-workspace-dialog.component';
 import { ZardDialogService } from '../../../../../shared/components/dialog/dialog.service';
@@ -81,6 +82,7 @@ import { ZardIconComponent } from '../../../../../shared/components/icon/icon.co
           </button>
 
           <button
+            (click)="goToProfile()"
             class="flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-sm cursor-pointer
                    text-foreground hover:bg-accent transition-colors"
             role="menuitem"
@@ -90,6 +92,7 @@ import { ZardIconComponent } from '../../../../../shared/components/icon/icon.co
           </button>
 
           <button
+            (click)="goToProfile()"
             class="flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-sm cursor-pointer
                    text-foreground hover:bg-accent transition-colors"
             role="menuitem"
@@ -248,6 +251,7 @@ export class AvatarMenuComponent implements OnDestroy {
   private readonly overlay = inject(Overlay);
   private readonly vcr = inject(ViewContainerRef);
   private readonly dialogService = inject(ZardDialogService);
+  private readonly router = inject(Router);
 
   // ── Template refs ────────────────────────────────────────────────────────
   private readonly triggerRef = viewChild.required<ElementRef>('triggerRef');
@@ -322,6 +326,11 @@ export class AvatarMenuComponent implements OnDestroy {
       zWidth: '440px',
       zHideFooter: true,
     });
+  }
+
+  goToProfile(): void {
+    this.closeAll();
+    this.router.navigate(['/profile']);
   }
 
   logout(): void {

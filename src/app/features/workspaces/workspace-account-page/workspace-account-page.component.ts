@@ -12,6 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
 import { WorkspaceService } from '@core/services/workspace.service';
 import { ZardAlertDialogService } from '@shared/components/alert-dialog/alert-dialog.service';
+import { ZardIconComponent } from '@shared/components/icon/icon.component';
 import { ToastService } from '@shared/services/toast.service';
 import { AppButtonComponent } from '@shared/ui/button/app-button.component';
 import { AppInputComponent } from '@shared/ui/input/app-input.component';
@@ -23,7 +24,13 @@ import type { WorkspaceResponse } from '../models/workspace.model';
   selector: 'app-workspace-account-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, AppInputComponent, AppButtonComponent, PageContainerComponent],
+  imports: [
+    ReactiveFormsModule,
+    AppInputComponent,
+    AppButtonComponent,
+    PageContainerComponent,
+    ZardIconComponent,
+  ],
   template: `
     <app-page-container>
       @if (workspace()) {
@@ -36,6 +43,68 @@ import type { WorkspaceResponse } from '../models/workspace.model';
               <span class="font-medium text-foreground">{{ workspace()!.name }}</span>
             </p>
           </div>
+
+          <!-- Cover section -->
+          <section class="space-y-4">
+            <h2 class="text-base font-semibold text-foreground">Cover image</h2>
+            <div class="space-y-3">
+              @if (coverUrl()) {
+                <div class="relative group rounded-lg overflow-hidden border border-border">
+                  <img [src]="coverUrl()" alt="Workspace cover" class="w-full h-40 object-cover" />
+                  <div
+                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
+                           transition-opacity flex items-center justify-center gap-3"
+                  >
+                    <label
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm
+                             font-medium bg-white text-black hover:bg-white/90 cursor-pointer transition-colors"
+                    >
+                      <z-icon zType="upload" class="size-4" />
+                      Replace
+                      <input
+                        type="file"
+                        accept="image/*"
+                        class="hidden"
+                        (change)="onCoverSelected($event)"
+                      />
+                    </label>
+                    <button
+                      (click)="onDeleteCover()"
+                      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm
+                             font-medium bg-destructive text-destructive-foreground
+                             hover:bg-destructive/90 transition-colors cursor-pointer"
+                    >
+                      <z-icon zType="trash-2" class="size-4" />
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              } @else {
+                <label
+                  class="flex flex-col items-center justify-center h-32 rounded-lg border-2
+                         border-dashed border-border hover:border-primary/50 hover:bg-accent/50
+                         transition-colors cursor-pointer gap-2"
+                >
+                  <z-icon zType="image" class="size-8 text-muted-foreground" />
+                  <span class="text-sm text-muted-foreground">Click to upload a cover image</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    class="hidden"
+                    (change)="onCoverSelected($event)"
+                  />
+                </label>
+              }
+              @if (coverUploading()) {
+                <span class="text-xs text-muted-foreground flex items-center gap-1.5">
+                  <z-icon zType="loader-circle" class="size-3.5 animate-spin" />
+                  Uploading…
+                </span>
+              }
+            </div>
+          </section>
+
+          <div class="border-t border-border"></div>
 
           <!-- Rename section -->
           <section class="space-y-4">
@@ -95,14 +164,15 @@ export class WorkspaceAccountPageComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
 
   readonly renameLoading = signal(false);
+  readonly coverUploading = signal(false);
 
   readonly workspace = computed<WorkspaceResponse | null>(() => {
     const slug = this.route.snapshot.paramMap.get('workspaceSlug') ?? '';
-    // Slug format: <name-slug>-<id>  — id is a UUID (no hyphens in name part of UUID)
-    // Find the workspace whose id appears at the end of the slug
     const workspaces = this.workspaceService.workspaces();
     return workspaces.find((w) => slug.endsWith(w.id)) ?? null;
   });
+
+  readonly coverUrl = computed(() => this.workspace()?.coverUrl ?? null);
 
   readonly renameForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
@@ -144,6 +214,55 @@ export class WorkspaceAccountPageComponent implements OnInit {
       error: (err) => {
         this.renameLoading.set(false);
         this.toast.error(err?.error?.message ?? 'Failed to rename workspace.');
+      },
+    });
+  }
+
+  onCoverSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    input.value = '';
+
+    if (!file.type.startsWith('image/')) {
+      this.toast.error('Please select an image file.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      this.toast.error('Image must be smaller than 5 MB.');
+      return;
+    }
+
+    const ws = this.workspace();
+    if (!ws) return;
+
+    this.coverUploading.set(true);
+    this.workspaceService.uploadCover(ws.id, file).subscribe({
+      next: () => {
+        this.coverUploading.set(false);
+        this.toast.success('Cover updated!');
+      },
+      error: (err) => {
+        this.coverUploading.set(false);
+        this.toast.error(err?.error?.message ?? 'Failed to upload cover.');
+      },
+    });
+  }
+
+  onDeleteCover(): void {
+    const ws = this.workspace();
+    if (!ws) return;
+
+    this.alertDialog.confirm({
+      zTitle: 'Remove cover',
+      zDescription: 'Are you sure you want to remove the workspace cover image?',
+      zOkText: 'Remove',
+      zOkDestructive: true,
+      zOnOk: () => {
+        this.workspaceService.deleteCover(ws.id).subscribe({
+          next: () => this.toast.success('Cover removed.'),
+          error: (err) => this.toast.error(err?.error?.message ?? 'Failed to remove cover.'),
+        });
       },
     });
   }

@@ -18,16 +18,29 @@ import { EditBoardDialogComponent } from '../components/edit-board-dialog/edit-b
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ZardIconComponent, AppButtonComponent, PageHeaderComponent, BoardKanbanComponent],
   template: `
-    <div class="flex flex-col h-full">
+    <div
+      class="flex flex-col h-full relative"
+      [style.background-image]="
+        boardService.activeBoard()?.coverUrl
+          ? 'url(' + boardService.activeBoard()!.coverUrl + ')'
+          : 'none'
+      "
+      [style.background-size]="'cover'"
+      [style.background-position]="'center'"
+    >
+      @if (boardService.activeBoard()?.coverUrl) {
+        <div class="absolute inset-0 bg-black/40 pointer-events-none"></div>
+      }
+
       @if (boardService.activeBoardLoading()) {
-        <div class="flex items-center justify-center h-full">
+        <div class="flex items-center justify-center h-full relative z-10">
           <div class="flex flex-col items-center gap-3 text-muted-foreground">
             <z-icon zType="loader-circle" class="size-8 animate-spin" />
             <p class="text-sm">Loading board...</p>
           </div>
         </div>
       } @else if (boardService.activeBoardError()) {
-        <div class="flex items-center justify-center h-full">
+        <div class="flex items-center justify-center h-full relative z-10">
           <div class="flex flex-col items-center gap-3 text-muted-foreground">
             <z-icon zType="circle-x" class="size-8 text-destructive" />
             <p class="text-sm">{{ boardService.activeBoardError() }}</p>
@@ -35,8 +48,12 @@ import { EditBoardDialogComponent } from '../components/edit-board-dialog/edit-b
           </div>
         </div>
       } @else if (boardService.activeBoard(); as board) {
-        <div class="px-6 pt-6 pb-0 shrink-0">
-          <app-page-header [title]="board.name" [subtitle]="board.description">
+        <div class="px-6 pt-6 pb-0 shrink-0 relative z-10">
+          <app-page-header
+            [title]="board.name"
+            [subtitle]="board.description"
+            [class]="board.coverUrl ? 'text-white [&_h1]:text-white [&_p]:text-white/80' : ''"
+          >
             <app-button variant="ghost" icon="users" (click)="openBoardMembers()"
               >Members</app-button
             >
@@ -47,7 +64,7 @@ import { EditBoardDialogComponent } from '../components/edit-board-dialog/edit-b
           </app-page-header>
         </div>
 
-        <app-board-kanban [boardId]="board.id" />
+        <app-board-kanban class="relative z-10" [boardId]="board.id" />
       }
     </div>
   `,

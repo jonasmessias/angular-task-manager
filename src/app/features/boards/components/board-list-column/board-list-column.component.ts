@@ -6,8 +6,8 @@ import { ZardBadgeComponent } from '@shared/components/badge/badge.component';
 import { ZardDialogService } from '@shared/components/dialog/dialog.service';
 import { ZardIconComponent } from '@shared/components/icon/icon.component';
 import { ToastService } from '@shared/services/toast.service';
+import { CardDetailDialogComponent } from '../../../cards/components/card-detail-dialog/card-detail-dialog.component';
 import { CreateCardDialogComponent } from '../../../cards/components/create-card-dialog/create-card-dialog.component';
-import { EditCardDialogComponent } from '../../../cards/components/edit-card-dialog/edit-card-dialog.component';
 import type { CardResponse } from '../../../cards/models/card.model';
 import type { ListWithCards } from '../../../lists/models/list.model';
 
@@ -158,10 +158,10 @@ export class BoardListColumnComponent {
 
   openEditCard(card: CardResponse): void {
     this.dialogService.create({
-      zTitle: 'Edit card',
-      zContent: EditCardDialogComponent,
+      zTitle: card.name,
+      zContent: CardDetailDialogComponent,
       zData: { card, boardId: this.boardId() },
-      zWidth: '480px',
+      zWidth: '720px',
       zHideFooter: true,
     });
   }
